@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 import { cookies } from 'next/headers';
 import Link from "next/link";
 import {Github} from "lucide-react";
+import { logoutAction } from "~/action/logout";
 
 
 export const metadata: Metadata = {
@@ -42,7 +43,7 @@ function NavBar({ userIsSignedIn }: { userIsSignedIn: boolean }) {
         <Link className="text-sm font-medium hover:underline underline-offset-4" href="/">
           Home
         </Link>
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/browse">
+        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/project/1">
           Browse
         </Link>
         <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
@@ -50,12 +51,18 @@ function NavBar({ userIsSignedIn }: { userIsSignedIn: boolean }) {
         </Link>
         {userIsSignedIn ? (
           <>
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
+            <Link className="text-sm font-medium hover:underline underline-offset-4" href="/profile">
               Profile
             </Link>
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-              Logout
-            </Link>
+            <form action={logoutAction} className="text-sm font-medium hover:underline underline-offset-4">
+        <button
+          type="submit"
+          className=""
+        >
+          Logout
+        </button>
+      </form>
+
           </>
         ) : (
           <>

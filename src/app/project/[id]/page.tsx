@@ -79,7 +79,7 @@ const project = {
   },
 };
 
-export default function ProjectDetailPage({
+export default async function ProjectDetailPage({
   params,
 }: {
   params: { id: string };
@@ -89,6 +89,8 @@ export default function ProjectDetailPage({
   if (Number.parseInt(params.id) !== project.id) {
     notFound();
   }
+
+
 
   return (
     <div className="flex min-h-screen flex-col">
