@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 
 export default function DonatePage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  if (!params?.id) {
-    return <h1>Error: Project ID not found</h1>;
-  }
+  // if (!params?.id) {
+  //   return <h1>Error: Project ID not found</h1>;
+  // }
 
-  const projectId = params.id;
+  // const projectId = params.id;
   const project = { name: "Awesome Project", description: "Support this amazing project!" };
 
   // State for form inputs
