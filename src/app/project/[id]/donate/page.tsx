@@ -16,7 +16,10 @@ export default function DonatePage() {
   // mock up project data
   const project = { title: "Awesome Project", description: "Support this amazing project!" };
 
-  // State for form inputs
+  // State for money amount input
+  const [money, setMoney] = useState("");
+
+  // State for credit card form inputs
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolder, setCardHolder] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
@@ -25,6 +28,10 @@ export default function DonatePage() {
 
   // Validation
   const handleDonate = async () => {
+    if (!/^\d*\.?\d{2}$/.test(money)) {
+      alert("Enter a valid amount of money")
+      return;
+    }
     if (!/^\d{16}$/.test(cardNumber)) {
       alert("Enter a valid 16-digit card number.");
       return;
@@ -52,6 +59,20 @@ export default function DonatePage() {
       <div className="bg-white p-6 shadow-lg rounded-lg max-w-md text-center">
         <h1 className="text-2xl font-bold">{project.title}</h1>
         <p className="text-gray-600">{project.description}</p>
+
+        <div className="relative mt-4 w-full">
+        {/* Static $ next to the input */}
+        <input
+          type="text"
+          placeholder="1.00"
+          className="mt-4 p-2 pr-7 border rounded w-full truncate"
+          value={money}
+          onChange={(e) => setMoney(e.target.value)}
+          disabled={loading}
+        />
+        <span className="absolute right-2 top-2/3 transform -translate-y-1/2">$</span>
+
+      </div>
 
         {/* Cardholder Name */}
         <input
@@ -105,6 +126,11 @@ export default function DonatePage() {
           {loading ? "Processing..." : "Confirm Donation"}
         </button>
         </div>
+        <style jsx>{`
+        .placeholder-right::placeholder {
+          text-align: right; /* Align placeholder text to the right for this input */
+        }
+      `}</style>
     </div>
   );
 }
