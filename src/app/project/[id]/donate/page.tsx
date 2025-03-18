@@ -1,14 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export default function DonatePage() {
   const router = useRouter()
-  const project_path = useParams();
+  const params = useParams();
+    
+  const projectId = params.id ? Number.parseInt(params.id as string, 10) : null;
 
-  const projectId = project_path.id;
-  const project = { name: "Awesome Project", description: "Support this amazing project!" };
+  // use id from url to get project (API to be implemented)
+  // mock up project data
+  const project = { title: "Awesome Project", description: "Support this amazing project!" };
 
   // State for form inputs
   const [cardNumber, setCardNumber] = useState("");
@@ -36,14 +42,15 @@ export default function DonatePage() {
       return;
     }
 
+    toast.success("Donation successful!");
     router.push(`/project/${projectId}`);
-    
+
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <div className="bg-white p-6 shadow-lg rounded-lg max-w-md text-center">
-        <h1 className="text-2xl font-bold">{project.name}</h1>
+        <h1 className="text-2xl font-bold">{project.title}</h1>
         <p className="text-gray-600">{project.description}</p>
 
         {/* Cardholder Name */}
@@ -97,7 +104,7 @@ export default function DonatePage() {
         >
           {loading ? "Processing..." : "Confirm Donation"}
         </button>
-      </div>
+        </div>
     </div>
   );
 }
