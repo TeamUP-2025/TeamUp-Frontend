@@ -37,29 +37,7 @@ export default function DonatePage() {
     }
 
     router.push(`/project/${projectId}`);
-
-
-    // setLoading(true);
-    // try {
-    //   const response = await fetch(`/api/donate`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ projectId, cardNumber, cardHolder, expiryDate, cvv }),
-    //   });
-
-    //   const data = await response.json();
-    //   if (response.ok) {
-    //     alert("Donation successful!");
-    //     router.push(`/project/${projectId}`);
-    //   } else {
-    //     alert("Error: " + (data.error || "Donation failed."));
-    //   }
-    // } catch (error) {
-    //   alert("Network error. Please try again.");
-    //   console.error("Fetch error:", error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    
   };
 
   return (
