@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-export default function DonatePage({ params }: { params: { id: string } }) {
-  const router = useRouter();
-  // if (!params?.id) {
-  //   return <h1>Error: Project ID not found</h1>;
-  // }
+export default function DonatePage() {
+  const router = useRouter()
+  const project_path = useParams();
 
-  // const projectId = params.id;
+  const projectId = project_path.id;
   const project = { name: "Awesome Project", description: "Support this amazing project!" };
 
   // State for form inputs
@@ -38,27 +36,30 @@ export default function DonatePage({ params }: { params: { id: string } }) {
       return;
     }
 
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/donate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId, cardNumber, cardHolder, expiryDate, cvv }),
-      });
+    router.push(`/project/${projectId}`);
 
-      const data = await response.json();
-      if (response.ok) {
-        alert("Donation successful!");
-        router.push(`/project/${projectId}`);
-      } else {
-        alert("Error: " + (data.error || "Donation failed."));
-      }
-    } catch (error) {
-      alert("Network error. Please try again.");
-      console.error("Fetch error:", error);
-    } finally {
-      setLoading(false);
-    }
+
+    // setLoading(true);
+    // try {
+    //   const response = await fetch(`/api/donate`, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ projectId, cardNumber, cardHolder, expiryDate, cvv }),
+    //   });
+
+    //   const data = await response.json();
+    //   if (response.ok) {
+    //     alert("Donation successful!");
+    //     router.push(`/project/${projectId}`);
+    //   } else {
+    //     alert("Error: " + (data.error || "Donation failed."));
+    //   }
+    // } catch (error) {
+    //   alert("Network error. Please try again.");
+    //   console.error("Fetch error:", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
