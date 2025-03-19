@@ -4,70 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
+import { getRecentRepo, getUserProfile } from "~/action/github"
 
-// Mock data
-const profile = {
-    name: "Octocat",
-    login: "octocat",
-    avatar_url: "https://github.com/github.png",
-    bio: "I'm a passionate developer who loves to code and contribute to open source projects.",
-    location: "San Francisco, CA",
-    blog: "https://github.blog",
-    created_at: "2011-01-25T18:44:36Z",
-    followers: 3938,
-    following: 9,
-    public_repos: 8,
-}
+export default async function ProfilePage() {
+    const [user, repos] = await Promise.all([
+        getUserProfile(),
+        getRecentRepo()
+    ])
 
-const repos = [
-    {
-        id: 1,
-        name: "Hello-World",
-        description: "My first repository on GitHub!",
-        language: "JavaScript",
-        stargazers_count: 1520,
-        forks_count: 1120,
-        html_url: "https://github.com/octocat/Hello-World",
-    },
-    {
-        id: 2,
-        name: "Spoon-Knife",
-        description: "This repo is for demonstration purposes only.",
-        language: "HTML",
-        stargazers_count: 10601,
-        forks_count: 124620,
-        html_url: "https://github.com/octocat/Spoon-Knife",
-    },
-    {
-        id: 3,
-        name: "octocat.github.io",
-        description: "Octocat's personal website",
-        language: "CSS",
-        stargazers_count: 38,
-        forks_count: 42,
-        html_url: "https://github.com/octocat/octocat.github.io",
-    },
-    {
-        id: 4,
-        name: "git-consortium",
-        description: "This repo is for demonstration purposes only.",
-        language: "Ruby",
-        stargazers_count: 8,
-        forks_count: 32,
-        html_url: "https://github.com/octocat/git-consortium",
-    },
-    {
-        id: 5,
-        name: "test-repo1",
-        description: "A test repository",
-        language: "Python",
-        stargazers_count: 2,
-        forks_count: 1,
-        html_url: "https://github.com/octocat/test-repo1",
-    },
-]
-
-export default function ProfilePage() {
     return (
         <div className="flex flex-col min-h-screen">
             <main className="flex-1 py-6 px-4 md:px-6">
@@ -75,38 +19,40 @@ export default function ProfilePage() {
                     <div className="space-y-8">
                         <div className="flex flex-col items-center space-y-4">
                             <Avatar className="w-32 h-32">
-                                <AvatarImage src={profile.avatar_url} alt={profile.name} />
-                                <AvatarFallback>{profile.login.slice(0, 2).toUpperCase()}</AvatarFallback>
+                                <AvatarImage src={user.avatar_url} alt={user.name} />
+                                <AvatarFallback>{user.login.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div className="text-center">
-                                <h1 className="text-2xl font-bold">{profile.name}</h1>
-                                <p className="text-gray-500">@{profile.login}</p>
+                                <h1 className="text-2xl font-bold">{user.name}</h1>
+                                <p className="text-gray-500">@{user.login}</p>
                             </div>
                         </div>
-                        {profile.bio && <p className="text-center max-w-2xl mx-auto">{profile.bio}</p>}
+                        {user.bio && <p className="text-center max-w-2xl mx-auto">{user.bio}</p>}
                         <div className="flex flex-wrap justify-center gap-4">
-                            {profile.location && (
+                            {user.location && (
                                 <div className="flex items-center space-x-2">
                                     <MapPin className="w-4 h-4" />
-                                    <span>{profile.location}</span>
+                                    <span>{user.location}</span>
                                 </div>
                             )}
                         </div>
                         <div className="flex justify-center space-x-4">
                             <div className="text-center">
-                                <div className="text-2xl font-bold">{profile.followers}</div>
+                                <div className="text-2xl font-bold">{user.followers}</div>
                                 <div className="text-gray-500">Followers</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-2xl font-bold">{profile.following}</div>
+                                <div className="text-2xl font-bold">{user.following}</div>
                                 <div className="text-gray-500">Following</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-2xl font-bold">{profile.public_repos}</div>
+                                <div className="text-2xl font-bold">{user.public_repos + user.total_private_repos}</div>
                                 <div className="text-gray-500">Repositories</div>
                             </div>
                         </div>
                     </div>
+                    
+                    {/* repositroy */}
                     <div className="space-y-4">
                         <h2 className="text-xl font-bold">Recent Repositories</h2>
                         {repos.map((repo) => (
