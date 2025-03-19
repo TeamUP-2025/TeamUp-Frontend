@@ -25,10 +25,31 @@ export default function DonatePage() {
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  const luhnCheck = (cardNumber: string) => {
+    let sum = 0;
+    let isEven = false;
+
+    for (let i = cardNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cardNumber.charAt(i), 10);
+
+        if (isEven) {
+            digit *= 2;
+            if (digit > 9) {
+                digit -= 9;
+            }
+        }
+
+        sum += digit;
+        isEven = !isEven;
+    }
+
+    return sum % 10 === 0;
+  };
 
   // Validation
   const handleDonate = async () => {
-    if (!/^\d*\.?\d{2}$/.test(money)) {
+    if (!/^\d*\.?\d{1,2}$/.test(money)) {
       alert("Enter a valid amount of money")
       return;
     }
@@ -36,14 +57,45 @@ export default function DonatePage() {
       alert("Enter a valid 16-digit card number.");
       return;
     }
-    if (!cardHolder.trim()) {
-      alert("Enter the cardholder's name.");
+
+    // Luhn algorithm check (basic card number validity)
+    if (!luhnCheck(cardNumber)) {
+      alert("Invalid card number.");
       return;
     }
-    if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+
+    const trimmedCardHolder = cardHolder.trim(); // Trim whitespace
+    if (!trimmedCardHolder) {
+        alert("Enter the cardholder's name.");
+        return;
+    }
+
+    if (!/^[a-zA-Z\s.'-]+$/.test(trimmedCardHolder)) {
+      alert("Invalid cardholder name. Use only letters, spaces, periods, apostrophes, and hyphens.");
+      return;
+  }
+
+    if (trimmedCardHolder.length > 100) { 
+        alert("Cardholder name is too long.");
+        return;
+    }
+
+    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
       alert("Enter a valid expiry date (MM/YY).");
       return;
     }
+
+    const [month, year] = expiryDate.split('/').map(Number);
+    const currentYear = new Date().getFullYear() % 100; // Get last 2 digits of current year
+    const currentMonth = new Date().getMonth() + 1;
+
+    if (year && month){
+      if (year < currentYear || (year === currentYear && month < currentMonth)) {
+        alert("Card has expired.");
+        return;
+      }
+    }
+
     if (!/^\d{3,4}$/.test(cvv)) {
       alert("Enter a valid CVV.");
       return;
