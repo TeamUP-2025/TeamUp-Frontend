@@ -2,10 +2,13 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import { cookies } from 'next/headers';
 import Link from "next/link";
 import { Github } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { logoutAction } from "~/action/logout";
+
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -13,47 +16,66 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value; // undefined if not set
+
+  const userIsSignedIn = Boolean(token);
+
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <header className="flex h-14 items-center border-b px-4 lg:px-6">
-          <Link className="flex items-center justify-center" href="/public">
-            <Github className="mr-2 h-6 w-6" />
-            <span className="font-bold">TeamUP</span>
-          </Link>
-          <nav className="ml-auto flex gap-4 sm:gap-6">
-            <Link
-              className="text-sm font-medium underline-offset-4 hover:underline"
-              href="/public"
-            >
-              Home
-            </Link>
-            <Link
-              className="text-sm font-medium underline-offset-4 hover:underline"
-              href="/browse"
-            >
-              Browse
-            </Link>
-            <Link
-              className="text-sm font-medium underline-offset-4 hover:underline"
-              href="#"
-            >
-              My Projects
-            </Link>
-            <Link
-              className="text-sm font-medium underline-offset-4 hover:underline"
-              href="#"
-            >
-              Profile
-            </Link>
-          </nav>
-        </header>
+        <NavBar userIsSignedIn={userIsSignedIn} />
         {children}
         <ToastContainer position="top-center" autoClose={3000} />
       </body>
     </html>
+  );
+}
+
+function NavBar({ userIsSignedIn }: { userIsSignedIn: boolean }) {
+  return (
+    <header className="px-4 lg:px-6 h-14 flex items-center border-b">
+      <Link className="flex items-center justify-center" href="/">
+        <Github className="h-6 w-6 mr-2"/>
+        <span className="font-bold">TeamUP</span>
+      </Link>
+      <nav className="ml-auto flex gap-4 sm:gap-6">
+        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/">
+          Home
+        </Link>
+        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/project/1">
+          Browse
+        </Link>
+        <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
+          My Projects
+        </Link>
+        {userIsSignedIn ? (
+          <>
+            <Link className="text-sm font-medium hover:underline underline-offset-4" href="/profile">
+              Profile
+            </Link>
+            <form action={logoutAction} className="text-sm font-medium hover:underline underline-offset-4">
+        <button
+          type="submit"
+          className=""
+        >
+          Logout
+        </button>
+      </form>
+
+          </>
+        ) : (
+          <>
+            <Link className="text-sm font-medium hover:underline underline-offset-4" href="http://localhost:8080/auth/github">
+              Login
+            </Link>
+          </>
+        )}
+        
+      </nav>
+    </header>
   );
 }
