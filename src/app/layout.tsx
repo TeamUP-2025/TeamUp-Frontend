@@ -4,7 +4,9 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { cookies } from 'next/headers';
 import Link from "next/link";
-import {Github} from "lucide-react";
+import { Github } from "lucide-react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { logoutAction } from "~/action/logout";
 
 
@@ -27,6 +29,7 @@ export default async function RootLayout({
       <body>
         <NavBar userIsSignedIn={userIsSignedIn} />
         {children}
+        <ToastContainer position="top-center" autoClose={3000} />
       </body>
     </html>
   );
