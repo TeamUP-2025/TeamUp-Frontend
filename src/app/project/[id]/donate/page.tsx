@@ -102,9 +102,13 @@ export default function DonatePage() {
     }
 
     toast.success("Donation successful!");
-    router.push(`/project/${projectId}`);
-
+    goback_project()
   };
+
+  const goback_project = async () => {
+    router.push(`/project/${projectId}`);
+  }
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
@@ -168,6 +172,14 @@ export default function DonatePage() {
           onChange={(e) => setCvv(e.target.value)}
           disabled={loading}
         />
+        {/* Cancel Button */}
+        <button
+          onClick={goback_project}
+          className={`mt-4 p-3 text-white rounded w-full ${loading ? "bg-gray-400" : "bg-blue-500"}`}
+          disabled={loading}
+        >
+          {loading ? "Processing..." : "Cancel"}
+        </button>
 
         {/* Confirm Button */}
         <button
@@ -175,12 +187,13 @@ export default function DonatePage() {
           className={`mt-4 p-3 text-white rounded w-full ${loading ? "bg-gray-400" : "bg-blue-500"}`}
           disabled={loading}
         >
-          {loading ? "Processing..." : "Confirm Donation"}
+          {loading ? "Processing..." : "Confirm"}
         </button>
+
         </div>
         <style jsx>{`
         .placeholder-right::placeholder {
-          text-align: right; /* Align placeholder text to the right for this input */
+          text-align: right;
         }
       `}</style>
     </div>
