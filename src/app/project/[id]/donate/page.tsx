@@ -172,14 +172,6 @@ export default function DonatePage() {
           onChange={(e) => setCvv(e.target.value)}
           disabled={loading}
         />
-        {/* Cancel Button */}
-        <button
-          onClick={goback_project}
-          className={`mt-4 p-3 text-white rounded w-full ${loading ? "bg-gray-400" : "bg-blue-500"}`}
-          disabled={loading}
-        >
-          {loading ? "Processing..." : "Cancel"}
-        </button>
 
         {/* Confirm Button */}
         <button
