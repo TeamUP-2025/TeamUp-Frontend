@@ -1,6 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { githubRepoArray, githubUser } from "~/schema/githut_schema";
+import { githubRepoArray, githubUser } from "~/schema/github_schema";
 
 export async function getUserProfile() {
     "use server";

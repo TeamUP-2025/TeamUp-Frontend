@@ -5,7 +5,7 @@ import ProjectForm from "~/components/ui/project-form";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export default function EditProjectPage() {
+export default async function EditProjectPage() {
   const router = useRouter()
   const params = useParams();
     
