@@ -1,7 +1,7 @@
 "use client"
 
 import { useParams, useRouter } from "next/navigation"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 export default function JoinProjectPage() {
@@ -91,6 +91,7 @@ export default function JoinProjectPage() {
         toast.success(`Join request sent to project ${project.title}`)
         router.push(`/project/${projectId}`);
     }
+    
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
