@@ -206,8 +206,13 @@ export default async function ProjectDetailPage({
               </div>
             </CardContent>
           </Card>
+
           <div className="flex justify-center gap-4">
-            <Button size="lg">Apply to TeamUP with {project.title}</Button>
+            <Button size="lg">
+            <Link href={`/project/${params.id}/join`}>
+              Apply to TeamUP with {project.title}
+            </Link>
+            </Button>
             
             <Button size="lg">
               <Link href={`/project/${params.id}/donate`}>

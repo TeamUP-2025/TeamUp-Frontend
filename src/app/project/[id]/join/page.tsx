@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 export default function JoinProjectPage() {
     const router = useRouter();
     const params = useParams();
-    const [open, setOpen] = useState(true);
 
 
     const projectId = params.id ? Number.parseInt(params.id as string, 10) : null;
@@ -88,23 +87,13 @@ export default function JoinProjectPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // todo: add user to userproject db
-        setOpen(false);
 
         toast.success(`Join request sent to project ${project.title}`)
         router.push(`/project/${projectId}`);
     }
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <button 
-                onClick={() => setOpen(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700"
-            >
-                Join Project
-            </button>
-
-            {/* Modal */}
-            {open && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                         <h2 className="text-xl font-bold mb-4">Join {project.title} as {githubUser.username}?</h2>
                         <div className="flex items-center space-x-4 border p-4 rounded-lg">
@@ -122,7 +111,7 @@ export default function JoinProjectPage() {
                         </div>
                         <div className="flex justify-center mt-4">
                             <button 
-                                onClick={() => setOpen(false)}
+                                onClick={() => router.back()}
                                 className="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
                             >
                                 Cancel
@@ -136,7 +125,7 @@ export default function JoinProjectPage() {
                         </div>
                     </div>
                 </div>
-            )}
+            
         </div>
     );
 }
