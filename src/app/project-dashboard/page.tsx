@@ -23,7 +23,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,7 +32,6 @@ import {
     DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
 import { Input } from "~/components/ui/input"
-import { Progress } from "~/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 import { Textarea } from "~/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
@@ -102,7 +101,7 @@ const sampleRepos = [
     { id: "repo1", name: "project-frontend", owner: "teamup" },
     { id: "repo2", name: "project-backend", owner: "teamup" },
     { id: "repo3", name: "project-docs", owner: "teamup" },
-]
+];
 
 // Sample team members data
 const sampleTeamMembers = [
@@ -210,15 +209,6 @@ export default function ProjectDashboard() {
             ...prev,
             [name]: value,
         }))
-    }
-
-    // Calculate progress based on roadmap
-    const calculateProgress = () => {
-        const total = project.roadmap.length
-        const completed = project.roadmap.filter((item) => item.status === "Completed").length
-        const inProgress = project.roadmap.filter((item) => item.status === "In Progress").length
-
-        return Math.round(((completed + inProgress * 0.5) / total) * 100)
     }
 
     // Handle connecting a repository
@@ -613,15 +603,6 @@ export default function ProjectDashboard() {
                                         ))}
                                     </div>
                                 </CardContent>
-                                <CardFooter>
-                                    <div className="w-full">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm font-medium">Overall Progress</span>
-                                            <span className="text-sm text-muted-foreground">{calculateProgress()}%</span>
-                                        </div>
-                                        <Progress value={calculateProgress()} className="mt-2" />
-                                    </div>
-                                </CardFooter>
                             </Card>
                         </TabsContent>
 
@@ -826,7 +807,7 @@ export default function ProjectDashboard() {
                                                     </div>
                                                     <div className="flex items-center justify-between border-t p-3">
                                                         <Button variant="outline" size="sm" asChild>
-                                                            <Link href={request.user.profile}>
+                                                            <Link href={request.user.id}>
                                                                 <ExternalLink className="mr-2 h-4 w-4" />
                                                                 View Profile
                                                             </Link>
