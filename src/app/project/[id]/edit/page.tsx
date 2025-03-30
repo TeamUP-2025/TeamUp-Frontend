@@ -4,14 +4,21 @@
 import ProjectForm from "~/components/ui/project-form";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
-export default async function EditProjectPage() {
+export default function EditProjectPage() {
   const router = useRouter()
   const params = useParams();
     
   const projectId = params.id ? Number.parseInt(params.id as string, 10) : null;
-
   // use id from url to get project (API to be implemented)
+  useEffect(() => {
+    const fetchData = async () => {
+    };
+    fetchData();
+  }, []);
+
+
   // mock up project data
   const project = {
     id: 1,

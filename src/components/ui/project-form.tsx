@@ -2,6 +2,8 @@
 
 import { Project } from "~/schema/project";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface ProjectFormProps {
   mode: "create" | "edit";
@@ -12,6 +14,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ mode, project }) => {
   if (mode === "edit" && !project) {
     return <p>Error: No project found for editing.</p>;
   }
+
+  const router = useRouter()
 
   const [title, setTitle] = useState(project?.title || "");
   const [description, setDescription] = useState(project?.description || "");
@@ -41,7 +45,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ mode, project }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    // debug
     console.log({ title, description, longDescription, tags, roadmap, goals, license });
+
+    // todo: write changes to database
+
+    if (mode === "create"){
+      toast.success("Create Project successful!");
+      // redirect to root as placeholder for now
+      router.push(`/`); 
+    }else {
+      toast.success(`Edit Project ${project?.title} successful!`);
+      router.push(`/project/${project?.id}`);
+    }
   };
 
   return (
@@ -137,7 +153,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ mode, project }) => {
     value={license.name || ""}
     onChange={(e) => {
       const selectedLicense = e.target.value;
-      let licenseDetails = {};
+      let licenseDetails: { 
+        name: string; 
+        description: string; 
+        permission: string[]; 
+        condition: string[]; 
+        limitation: string[]; 
+      } = { name: "", description: "", permission: [], condition: [], limitation: [] };
+      
       
       // Set default details for the selected license
       switch (selectedLicense) {
@@ -175,7 +198,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ mode, project }) => {
           };
           break;
         default:
-          licenseDetails = { name: "", description: "", permission: [], condition: [], limitation: [] };
+          licenseDetails = { name: "", 
+            description: "", 
+            permission: [], 
+            condition: [], 
+            limitation: [] };
       }
 
       // If the user selects a preset, mark it as 'not custom' by default
@@ -235,39 +262,38 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ mode, project }) => {
 
   {/* Conditions (multiline list) */}
   <div>
-    <label>Conditions:</label>
+  <label>Conditions:</label>
+  <ul className="list-disc pl-5">
     {license.condition.map((cond, idx) => (
-      <ul className="list-disc pl-5">
-      {license.permission.map((perm, idx) => (
-        <li key={idx}>
-      <input
-              type="text"
-              value={cond}
-              onChange={(e) => {
-                const updatedConditions = [...license.condition];
-                updatedConditions[idx] = e.target.value;
-                setLicense({ ...license, condition: updatedConditions, name: "Custom" });
-              }}
-              className="w-full"
-            />
-        </li>
-      ))}
-    </ul>
+      <li key={`condition-${idx}`}>
+        <input
+          type="text"
+          value={cond}
+          onChange={(e) => {
+            const updatedConditions = [...license.condition];
+            updatedConditions[idx] = e.target.value;
+            setLicense({ ...license, condition: updatedConditions, name: "Custom" });
+          }}
+          className="w-full"
+        />
+      </li>
     ))}
-    <button
-      type="button"
-      onClick={() => {
-        setLicense({
-          ...license,
-          condition: [...license.condition, ""],
-          name: "Custom",
-        });
-      }}
-      className="mt-2 text-blue-500"
-    >
-      Add Condition
-    </button>
-  </div>
+  </ul>
+  <button
+    type="button"
+    onClick={() => {
+      setLicense({
+        ...license,
+        condition: [...license.condition, ""],
+        name: "Custom",
+      });
+    }}
+    className="mt-2 text-blue-500"
+  >
+    Add Condition
+  </button>
+</div>
+
 
   {/* Limitations (multiline list) */}
   <div>
@@ -303,10 +329,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ mode, project }) => {
     </button>
   </div>
 </div>
-
-
-
-
 
         {/* Submit Button */}
         <button type="submit">{mode === "create" ? "Create Project" : "Save Changes"}</button>

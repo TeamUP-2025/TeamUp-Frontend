@@ -1,18 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
-export default async function DonatePage() {
+export default function DonatePage() {
   const router = useRouter()
   const params = useParams();
     
   const projectId = params.id ? Number.parseInt(params.id as string, 10) : null;
+    // use id from url to get project (API to be implemented)
+  useEffect(() => {
+    const fetchData = async () => {
+    };
+    fetchData();
+  }, []);
 
-  // use id from url to get project (API to be implemented)
   // mock up project data
   const project = {
     id: 1,

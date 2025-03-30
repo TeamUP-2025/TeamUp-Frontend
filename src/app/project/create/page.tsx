@@ -2,7 +2,7 @@
 import ProjectForm from "~/components/ui/project-form";
 import { toast } from "react-toastify";
 
-export default async function CreateProjectPage() {
+export default function CreateProjectPage() {
   return (
     <div>
       <ProjectForm 
