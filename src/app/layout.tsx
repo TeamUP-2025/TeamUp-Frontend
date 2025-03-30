@@ -49,7 +49,7 @@ function NavBar({ userIsSignedIn }: { userIsSignedIn: boolean }) {
         <Link className="text-sm font-medium hover:underline underline-offset-4" href="/index">
           Browse
         </Link>
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/project-dashboard">
+        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/my-project">
           My Projects
         </Link>
         {userIsSignedIn ? (
