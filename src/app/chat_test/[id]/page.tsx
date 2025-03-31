@@ -14,7 +14,6 @@ export default async function ChatPage({
 
   const authSession = await getServerAuthSession();
   const { id } = await params
-  console.log(authSession)
   if (!authSession.isLoggedIn) {
     redirect("/")
   }

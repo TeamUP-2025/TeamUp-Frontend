@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 export interface AuthUser {
   name: string;
   isLoggedIn: boolean;
-  // Add other user fields you need
 }
 
 export interface DecodedToken {
