@@ -39,3 +39,4 @@ export async function getServerAuthSession(): Promise<AuthUser> {
     return { name: "", isLoggedIn: false };
   }
 }
+

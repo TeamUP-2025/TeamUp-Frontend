@@ -1,7 +1,6 @@
 "use server";
 
 import { redirect } from 'next/navigation'
-import {  use } from "react";
 import Chat from "~/components/chat/chat_component";
 import { env } from "~/env";
 import { getServerAuthSession } from "~/lib/auth";
