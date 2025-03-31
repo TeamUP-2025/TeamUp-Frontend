@@ -10,6 +10,7 @@ export async function getUserProfile() {
         Cookie: `token=${cookie?.value};`
     }})
     const data = await user.json()
+    console.log(data)
     const parseData = githubUser.parse(data)
     return parseData
   }
@@ -21,6 +22,7 @@ export async function getUserProfile() {
         Cookie: `token=${cookie?.value};`
     }})
     const data = await repo.json()
+    console.log(data)
     const parseData = githubRepoArray.parse(data)
     return parseData
   }

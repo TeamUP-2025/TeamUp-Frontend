@@ -56,26 +56,26 @@ export default async function ProfilePage() {
                     <div className="space-y-4">
                         <h2 className="text-xl font-bold">Recent Repositories</h2>
                         {repos.map((repo) => (
-                            <Card key={repo.id}>
+                            <Card key={repo.Repoid}>
                                 <CardHeader>
-                                    <CardTitle>{repo.name}</CardTitle>
-                                    <CardDescription>{repo.description}</CardDescription>
+                                    <CardTitle>{repo.Name}</CardTitle>
+                                    <CardDescription>{repo.Description}</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="flex justify-between items-center">
                                         <div className="flex space-x-2">
-                                            <Badge variant="secondary">{repo.language}</Badge>
+                                            <Badge variant="secondary">{repo.Language}</Badge>
                                             <div className="flex items-center space-x-1">
                                                 <Star className="w-4 h-4" />
-                                                <span>{repo.stargazers_count}</span>
+                                                <span>{repo.Star}</span>
                                             </div>
                                             <div className="flex items-center space-x-1">
                                                 <GitBranch className="w-4 h-4" />
-                                                <span>{repo.forks_count}</span>
+                                                <span>{repo.Fork}</span>
                                             </div>
                                         </div>
                                         <Button asChild variant="outline" size="sm">
-                                            <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
+                                            <a href={repo.Url} target="_blank" rel="noopener noreferrer">
                                                 View Repo
                                             </a>
                                         </Button>
