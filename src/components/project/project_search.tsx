@@ -17,8 +17,6 @@ import { Button } from "~/components/ui/button";
 
 interface ProjectSearchProps {
   allTags: string[];
-  allLicenses: string[];
-  allStatuses: string[];
   initialValues: {
     title: string;
     status: string;
@@ -27,12 +25,17 @@ interface ProjectSearchProps {
   };
 }
 
-export function ProjectSearch({
-  allTags,
-  allLicenses,
-  allStatuses,
-  initialValues,
-}: ProjectSearchProps) {
+const allStatuses = ["In Development", "Planning", "Maintenance", "Active"];
+
+const allLicenses = [
+  "Mozilla Public License 2.0",
+  "GNU GPLv3",
+  "BSD 3-Clause",
+  "MIT License",
+  "Apache License 2.0",
+];
+
+export function ProjectSearch({ allTags, initialValues }: ProjectSearchProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -40,7 +43,7 @@ export function ProjectSearch({
   const [status, setStatus] = useState(initialValues.status);
   const [licenseName, setLicenseName] = useState(initialValues.licenseName);
   const [selectedTags, setSelectedTags] = useState<string[]>(
-    initialValues.selectedTags
+    initialValues.selectedTags,
   );
   const [showFilters, setShowFilters] = useState(false);
 
@@ -83,7 +86,7 @@ export function ProjectSearch({
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
   };
 

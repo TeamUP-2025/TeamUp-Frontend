@@ -46,16 +46,6 @@ export default async function Home({
     new Set(projectsFetch.flatMap((project) => project.Tags)),
   ).sort();
 
-  const allStatuses = ["In Development", "Planning", "Maintenance", "Active"];
-
-  const allLicenses = [
-    "Mozilla Public License 2.0",
-    "GNU GPLv3",
-    "BSD 3-Clause",
-    "MIT License",
-    "Apache License 2.0",
-  ];
-
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1 px-4 py-6 md:px-6">
@@ -72,8 +62,6 @@ export default async function Home({
 
           <ProjectSearch
             allTags={allTags}
-            allLicenses={allLicenses}
-            allStatuses={allStatuses}
             initialValues={{
               title: title || "",
               status: status || "all",
