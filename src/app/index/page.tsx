@@ -1,6 +1,5 @@
 "use server";
 
-
 import {
   Card,
   CardContent,
@@ -42,22 +41,20 @@ export default async function Home({
     tagNames,
   });
 
-
-
   // Get unique tags from all projects
   const allTags = Array.from(
     new Set(projectsFetch.flatMap((project) => project.Tags)),
   ).sort();
 
-  // Get unique licenses from all projects
-  const allLicenses = Array.from(
-    new Set(projectsFetch.map((project) => project.License)),
-  ).sort();
+  const allStatuses = ["In Development", "Planning", "Maintenance", "Active"];
 
-  // Get unique statuses from all projects
-  const allStatuses = Array.from(
-    new Set(projectsFetch.map((project) => project.Status)),
-  ).sort();
+  const allLicenses = [
+    "Mozilla Public License 2.0",
+    "GNU GPLv3",
+    "BSD 3-Clause",
+    "MIT License",
+    "Apache License 2.0",
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
