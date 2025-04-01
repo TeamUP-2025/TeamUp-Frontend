@@ -82,7 +82,9 @@ export function ProjectSearch({ allTags, initialValues }: ProjectSearchProps) {
 
     // Navigate to new URL with updated parameters
     router.push(`/index?${params.toString()}`);
-  }, [title, status, licenseName, selectedTags, router, searchParams]);
+  }, [title, status, licenseName, selectedTags, 
+    // router,
+     searchParams]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
