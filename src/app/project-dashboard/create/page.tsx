@@ -5,9 +5,19 @@ import ProjectDashboardClient from "./project-dashboard-client";
 import ProjectDetails from "./project-details";
 import ProjectRepositories from "./project-repository";
 import { Button } from "~/components/ui/button";
+import { toast } from "react-toastify";
 
 export default function CreateProjectPage() {
     // Initialize empty project form state
+
+    // todo: get user from current logged in session
+    const sampleOwner = {
+        id: "user-1",
+        name: "Alex Morgan",
+        email: "alex@teamup.com",
+        avatar: "/placeholder.svg?height=40&width=40",
+    }
+
     const [project, setProject] = useState({
         title: "",
         description: "",
@@ -16,19 +26,14 @@ export default function CreateProjectPage() {
         roadmap: [],
         goals: [],
         license: { name: "" },
-        owner: {
-            id: "",
-            name: "",
-            email: "",
-            avatar: "",
-        },
+        owner:sampleOwner,
     });
 
     const [repositories, setRepositories] = useState([]);
     const [teamMembers, setTeamMembers] = useState([]);
     const [joinRequests, setJoinRequests] = useState([]);
 
-    // Async function for handling form submission
+    // Async function for handling form submission (placeholder)
     async function handleCreateProject() {
         try {
             const response = await fetch("/api/projects", {
@@ -46,6 +51,8 @@ export default function CreateProjectPage() {
         } catch (error) {
             console.error("Error creating project:", error);
         }
+        toast.success(`Created Project ${project.title}`);
+        // todo: redirect to new project page
     }
 
     return (
