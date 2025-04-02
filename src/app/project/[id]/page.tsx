@@ -18,20 +18,19 @@ import {
   Flag,
   OctagonAlert,
 } from "lucide-react";
-import {getProject, getProjectByID} from "~/action/project";
+import { getProject, getProjectByID } from "~/action/project";
 
 export default async function ProjectDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-
+  const { id } = await params
   const project = await getProjectByID(
-      params.id
+      id
   );
 
-
-
+  console.log(project);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -45,13 +44,13 @@ export default async function ProjectDetailPage({
               {project.Description}
             </p>
           </div>
-          {/*<div className="flex flex-wrap gap-2">*/}
-          {/*  {project.Tags.map((tag) => (*/}
-          {/*    <Badge key={tag} variant="secondary">*/}
-          {/*      {tag}*/}
-          {/*    </Badge>*/}
-          {/*  ))}*/}
-          {/*</div>*/}
+          <div className="flex flex-wrap gap-2">
+            {project.Tag.map((tag) => (
+              <Badge key={tag} variant="secondary">
+                {tag}
+              </Badge>
+            ))}
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>Project Description</CardTitle>
@@ -65,11 +64,16 @@ export default async function ProjectDetailPage({
               <CardTitle>Project Goals</CardTitle>
             </CardHeader>
             <CardContent>
-              {/*<ul className="list-disc space-y-2 pl-5">*/}
-              {/*  {project.goals.map((goal, index) => (*/}
-              {/*    <li key={index}>{goal}</li>*/}
-              {/*  ))}*/}
-              {/*</ul>*/}
+              <ul className="list-disc space-y-2 pl-5">
+                {project.Goal.map((goal, index) => (
+                    <li key={index}>
+                      <span className="font-semibold">{goal.goalName}</span>
+                      {goal.goalDescription && (
+                          <p className="text-sm text-gray-500">{goal.goalDescription}</p>
+                      )}
+                    </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
           <Card>
@@ -77,33 +81,33 @@ export default async function ProjectDetailPage({
               <CardTitle>Project Roadmap</CardTitle>
             </CardHeader>
             <CardContent>
-              {/*<ul className="space-y-4">*/}
-              {/*  {project.roadmap.map((item, index) => (*/}
-              {/*    <li key={index} className="flex items-start space-x-2">*/}
-              {/*      {item.status === "Completed" && (*/}
-              {/*        <CheckCircle2 className="mt-1 h-5 w-5 text-green-500" />*/}
-              {/*      )}*/}
-              {/*      {item.status === "In Progress" && (*/}
-              {/*        <Clock className="mt-1 h-5 w-5 text-yellow-500" />*/}
-              {/*      )}*/}
-              {/*      {item.status === "Not Started" && (*/}
-              {/*        <Circle className="mt-1 h-5 w-5 text-gray-300" />*/}
-              {/*      )}*/}
-              {/*      <div>*/}
-              {/*        <h3 className="font-semibold">{item.milestone}</h3>*/}
-              {/*        <p className="text-sm text-gray-500">*/}
-              {/*          {item.description}*/}
-              {/*        </p>*/}
-              {/*      </div>*/}
-              {/*    </li>*/}
-              {/*  ))}*/}
-              {/*</ul>*/}
+              <ul className="space-y-4">
+                {project.Roadmap.map((item, index) => (
+                  <li key={index} className="flex items-start space-x-2">
+                    {item.roadmapStatus === "Completed" && (
+                      <CheckCircle2 className="mt-1 h-5 w-5 text-green-500" />
+                    )}
+                    {item.roadmapStatus === "In Progress" && (
+                      <Clock className="mt-1 h-5 w-5 text-yellow-500" />
+                    )}
+                    {item.roadmapStatus === "Planned" && (
+                      <Circle className="mt-1 h-5 w-5 text-gray-300" />
+                    )}
+                    <div>
+                      <h3 className="font-semibold">{item.roadmap}</h3>
+                      <p className="text-sm text-gray-500">
+                        {item.roadmapDescription}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              {/*<CardTitle>{project.license.name}</CardTitle>*/}
-              {/*<CardDescription>{project.license.description}</CardDescription>*/}
+              <CardTitle>{project.License.name}</CardTitle>
+              <CardDescription>{project.License.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div
@@ -111,49 +115,41 @@ export default async function ProjectDetailPage({
                   "flex flex-col justify-evenly gap-x-5 gap-y-5 sm:flex-row"
                 }
               >
-                {/*<ul className="space-y-2">*/}
-                {/*  <a className={"text-lg font-bold"}>Permission</a>*/}
-                {/*  {project.license.permission.map((item, index) => (*/}
-                {/*    <li key={index} className="flex items-start space-x-1">*/}
-                {/*      <Check className="text-green-500 mt-1 h-4 w-4" />*/}
-                {/*      <div>*/}
-                {/*        <a className={"font-light"}>{item}</a>*/}
-                {/*      </div>*/}
-                {/*    </li>*/}
-                {/*  ))}*/}
-                {/*</ul>*/}
-                {/*<ul className="space-y-2">*/}
-                {/*  <a className={"text-lg font-bold"}>Condition</a>*/}
-                {/*  {project.license.condition.map((item, index) => (*/}
-                {/*    <li key={index} className="flex items-start space-x-1">*/}
-                {/*      <Flag className="text-yellow-500 mt-1 h-4 w-4" />*/}
-                {/*      <div>*/}
-                {/*        <a className={"font-light"}>{item}</a>*/}
-                {/*      </div>*/}
-                {/*    </li>*/}
-                {/*  ))}*/}
-                {/*</ul>*/}
-                {/*<ul className="space-y-2">*/}
-                {/*  <a className={"text-lg font-bold"}>Limitation</a>*/}
-                {/*  {project.license.limitation.map((item, index) => (*/}
-                {/*    <li key={index} className="flex items-start space-x-2">*/}
-                {/*      <OctagonAlert className="text-red-500 mt-1 h-4 w-4" />*/}
-                {/*      <div>*/}
-                {/*        <a className={"font-light"}>{item}</a>*/}
-                {/*      </div>*/}
-                {/*    </li>*/}
-                {/*  ))}*/}
-                {/*</ul>*/}
+                <ul className="space-y-2">
+                  <span className="text-lg font-bold">Permission</span>
+                  {project.License.permission.split(", ").map((item, index) => (
+                    <li key={index} className="flex items-start space-x-1">
+                      <Check className="mt-1 h-4 w-4 text-green-500" />
+                      <span className="font-light">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <ul className="space-y-2">
+                  <span className="text-lg font-bold">Condition</span>
+                  {project.License.condition.split(", ").map((item, index) => (
+                    <li key={index} className="flex items-start space-x-1">
+                      <Flag className="mt-1 h-4 w-4 text-yellow-500" />
+                      <span className="font-light">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <ul className="space-y-2">
+                  <span className="text-lg font-bold">Limitation</span>
+                  {project.License.limitation.split(", ").map((item, index) => (
+                    <li key={index} className="flex items-start space-x-2">
+                      <OctagonAlert className="mt-1 h-4 w-4 text-red-500" />
+                      <span className="font-light">{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </CardContent>
           </Card>
           <div className="flex justify-center gap-4">
             <Button size="lg">Apply to TeamUP with {project.Title}</Button>
-            
+
             <Button size="lg">
-              <Link href={`/project/${params.id}/donate`}>
-                Donate
-              </Link>
+              <Link href={`/project/${params.id}/donate`}>Donate</Link>
             </Button>
           </div>
         </div>

@@ -12,13 +12,16 @@ export const project = z.object({
     condition: z.coerce.string(),
     limitation: z.coerce.string()
   }),
-  Goal: z.object({
-    goal_name: z.coerce.string(),
-    goal_description: z.coerce.string().nullable()
-  }),
-  // License: z.string(),
-  // Goal: z.string(),
-  // Tags: z.array(z.coerce.string()).default([]),
+  Goal: z.array(z.object({
+    goalName: z.coerce.string(),
+    goalDescription: z.coerce.string().nullable()
+  })),
+  Roadmap: z.array(z.object({
+    roadmap: z.coerce.string(),
+    roadmapDescription: z.coerce.string().nullable(),
+    roadmapStatus: z.coerce.string()
+  })),
+  Tag: z.array(z.string()),
 });
 
 export const projectArray = z.array(project);
