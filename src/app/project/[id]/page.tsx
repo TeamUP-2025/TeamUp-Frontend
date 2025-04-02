@@ -18,6 +18,7 @@ import {
   Flag,
   OctagonAlert,
 } from "lucide-react";
+import JoinProjectPage from "./join-form";
 
 // This would typically come from an API or database
 const project = {
@@ -89,7 +90,6 @@ export default async function ProjectDetailPage({
   if (Number.parseInt(params.id) !== project.id) {
     notFound();
   }
-
 
 
   return (
@@ -208,14 +208,11 @@ export default async function ProjectDetailPage({
           </Card>
 
           <div className="flex justify-center gap-4">
-            <Button size="lg">
-            <Link href={`/project/${params.id}/join`}>
-              Apply to TeamUP with {project.title}
-            </Link>
-            </Button>
+            <JoinProjectPage 
+            project={project} />
             
             <Button size="lg">
-              <Link href={`/project/${params.id}/donate`}>
+              <Link href={`/project/${project.id}/donate`}>
                 Donate
               </Link>
             </Button>
