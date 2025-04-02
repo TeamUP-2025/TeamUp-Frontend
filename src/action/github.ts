@@ -1,9 +1,9 @@
+"use server";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { githubRepoArray, githubUser } from "~/schema/githut_schema";
 
-export async function getUserProfile() {
-  "use server";
+export async function getUserProfileAuth() {
   const cookieStore = await cookies();
   const cookie = await cookieStore.get("token");
   const user = await fetch("http://localhost:8080/git/profile", {
@@ -17,7 +17,7 @@ export async function getUserProfile() {
   return parseData;
 }
 
-export async function getRecentRepo() {
+export async function getRecentRepoAuth() {
   const cookieStore = await cookies();
   const cookie = await cookieStore.get("token");
   const repo = await fetch("http://localhost:8080/git/repos", {

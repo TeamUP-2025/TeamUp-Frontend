@@ -5,6 +5,7 @@ import { type AuthUser } from "~/lib/auth";
 // Define the complete context type
 interface AuthContextType extends AuthUser {
   isLoading: boolean;
+  setLoading: (loading: boolean) => void;
   // Add any additional methods here if needed
 }
 
@@ -19,11 +20,17 @@ const AuthProvider = ({ children, initialAuthState }: AuthProviderProps) => {
   const [name, setName] = useState(initialAuthState.name);
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState.isLoggedIn);
   const [isLoading, setIsLoading] = useState(false);
+  const [login, setLogin] = useState(initialAuthState.login);
+  const [uid, setUid] = useState(initialAuthState.uid);
+
 
   const value: AuthContextType = {
-    name,
-    isLoggedIn,
-    isLoading,
+    name: name,
+    isLoggedIn: isLoggedIn,
+    isLoading: isLoading,
+    setLoading: setIsLoading,
+    login: login,
+    uid: uid,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

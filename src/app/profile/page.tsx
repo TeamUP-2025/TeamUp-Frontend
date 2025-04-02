@@ -4,12 +4,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
-import { getRecentRepo, getUserProfile } from "~/action/github"
+import { getRecentRepoAuth, getUserProfileAuth } from "~/action/github"
+import { getServerAuthSession } from "~/lib/auth"
+import { redirect } from "next/navigation"
 
 export default async function ProfilePage() {
+
+  const auth = await getServerAuthSession();
+  if (!auth.isLoggedIn) {
+    redirect("/")
+  }
+
     const [user, repos] = await Promise.all([
-        getUserProfile(),
-        getRecentRepo()
+      getUserProfileAuth(),
+        getRecentRepoAuth()
     ])
 
     return (
