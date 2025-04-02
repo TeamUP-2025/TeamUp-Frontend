@@ -1,5 +1,5 @@
 "use server";
-import { projectArray } from "~/schema/project_schema";
+import {project, projectArray} from "~/schema/project_schema";
 
 type SearchParams = {
   title?: string;
@@ -36,5 +36,30 @@ export async function getProject(params?: SearchParams) {
     // Return an empty array if parsing fails
     return [];
   }
+  return parseData.data;
+}
+
+
+export async function getProjectByID(projectID: string) {
+  const decodeBase64Json = (base64Str) => {
+    // atob decodes the Base64 encoded string
+    const jsonString = window.atob(base64Str);
+    // Parse the JSON string to get an object/array
+    return JSON.parse(jsonString);
+  };
+
+  const projectfromID = await fetch(`http://localhost:8080/project/${projectID}`);
+  const data = await projectfromID.json();
+  const parsedLicense = decodeBase64Json(data.License);
+  const parsedGoal = decodeBase64Json(data.Goal);
+  const data_with_license_goal = data
+  const parseData = project.safeParse(data);
+  if (!parseData.success) {
+    console.log(data);
+    console.log("Failed to parse project data:", parseData.error.message)
+    // Return an empty array if parsing fails
+    return [];
+  }
+
   return parseData.data;
 }
