@@ -1,13 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "~/components/ui/button";
 
 
 export default function JoinProjectPage({ project }) {
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   // mock GitHub user data
@@ -30,8 +28,7 @@ export default function JoinProjectPage({ project }) {
     // todo: add user to userproject db
 
     toast.success(`Join request sent to project ${project.title}`);
-    router.push(`/project/${project.id}`);
-    handleClose(); // Close the modal after submission
+    handleClose(); 
   };
 
   return (
@@ -63,7 +60,7 @@ export default function JoinProjectPage({ project }) {
             </div>
             <div className="flex justify-center mt-4">
               <button
-                onClick={handleClose} // Use handleClose instead of router.back()
+                onClick={handleClose}
                 className="mr-2 px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
               >
                 Cancel
