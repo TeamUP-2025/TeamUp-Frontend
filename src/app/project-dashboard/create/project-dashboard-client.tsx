@@ -14,7 +14,6 @@ export default function ProjectDashboardClient({
                                                    initialRepositories,
                                                    initialTeamMembers,
                                                    initialJoinRequests,
-                                                   onCreateProject
                                                }) {
     const [project, setProject] = useState(initialProject)
     const [teamMembers, setTeamMembers] = useState(initialTeamMembers)
@@ -132,7 +131,7 @@ export default function ProjectDashboardClient({
                 <TabsContent value="roadmap" className="mt-4">
                     <ProjectRoadmap
                         roadmap={project.roadmap}
-                        progress={calculateProgress()}
+                        progress={calculateProgress()? calculateProgress():0}
                     />
                 </TabsContent>
 

@@ -65,10 +65,9 @@ export default function CreateProjectPage() {
                     initialRepositories={repositories}
                     initialTeamMembers={teamMembers}
                     initialJoinRequests={joinRequests}
-                    onCreateProject={handleCreateProject} // Pass the async function
                 />
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3 mt-5 px-8">
-                    <Button>Create</Button>
+                    <Button onClick={handleCreateProject}>Create</Button>
                 </div>
             </main>
         </div>
