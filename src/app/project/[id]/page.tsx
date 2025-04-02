@@ -18,79 +18,19 @@ import {
   Flag,
   OctagonAlert,
 } from "lucide-react";
-
-// This would typically come from an API or database
-const project = {
-  id: 1,
-  title: "AI-powered Image Recognition",
-  description:
-    "Develop a machine learning model for accurate image recognition and classification. This project aims to create a robust system that can identify objects, scenes, and patterns in images with high accuracy. We're looking for collaborators with experience in computer vision, deep learning, and Python programming.",
-  longDescription:
-    "Our project focuses on pushing the boundaries of image recognition technology. We're implementing state-of-the-art convolutional neural networks and exploring novel architectures to improve accuracy and efficiency. The system will be designed to handle a wide range of image types and will be optimized for both speed and accuracy. Key features we're working on include:\n\n- Multi-object detection and classification\n- Scene understanding and context analysis\n- Real-time processing for video streams\n- Integration with mobile and web platforms\n- Customizable training for specific use cases",
-  tags: ["Python", "TensorFlow", "Computer Vision", "Deep Learning", "CNN"],
-  roadmap: [
-    {
-      milestone: "Research and Planning",
-      description:
-        "Gather requirements, research state-of-the-art techniques, and plan project architecture",
-      status: "Completed",
-    },
-    {
-      milestone: "Data Collection and Preprocessing",
-      description: "Collect and preprocess diverse image datasets for training",
-      status: "In Progress",
-    },
-    {
-      milestone: "Model Development",
-      description: "Develop and train initial CNN models",
-      status: "Not Started",
-    },
-    {
-      milestone: "Testing and Optimization",
-      description: "Conduct thorough testing and optimize model performance",
-      status: "Not Started",
-    },
-    {
-      milestone: "Integration and Deployment",
-      description:
-        "Integrate the model into a user-friendly application and deploy",
-      status: "Not Started",
-    },
-  ],
-  goals: [
-    "Achieve 95% accuracy in object recognition across diverse image types",
-    "Develop a model capable of real-time processing for video streams",
-    "Create a user-friendly API for easy integration into various applications",
-    "Optimize the model for mobile devices without significant performance loss",
-    "Publish research findings and contribute to the open-source community",
-  ],
-  license: {
-    name: "MIT License",
-    description:
-      "a simple and permissive open-source license that allows developers to use, modify, distribute, and sublicense software with minimal restrictions. Here are the key terms of the MIT License",
-    permission: [
-      "Commercial Use",
-      "Distribution",
-      "Modification",
-      "Private Use",
-    ],
-    condition: ["License and copyright notice"],
-    limitation: ["Liability", "Warranty"],
-  },
-};
+import { getProject, getProjectByID } from "~/action/project";
 
 export default async function ProjectDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  // In a real app, you'd fetch the project data based on the ID
-  // For this example, we'll use the mock data
-  if (Number.parseInt(params.id) !== project.id) {
-    notFound();
-  }
+  const { id } = await params
+  const project = await getProjectByID(
+      id
+  );
 
-
+  console.log(project);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -98,14 +38,14 @@ export default async function ProjectDetailPage({
         <div className="mx-auto max-w-4xl space-y-8">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {project.title}
+              {project.Title}
             </h1>
             <p className="text-gray-500 dark:text-gray-400">
-              {project.description}
+              {project.Description}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
+            {project.Tag.map((tag) => (
               <Badge key={tag} variant="secondary">
                 {tag}
               </Badge>
@@ -116,7 +56,7 @@ export default async function ProjectDetailPage({
               <CardTitle>Project Description</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="whitespace-pre-wrap">{project.longDescription}</p>
+              <p className="whitespace-pre-wrap">{project.Description}</p>
             </CardContent>
           </Card>
           <Card>
@@ -125,8 +65,13 @@ export default async function ProjectDetailPage({
             </CardHeader>
             <CardContent>
               <ul className="list-disc space-y-2 pl-5">
-                {project.goals.map((goal, index) => (
-                  <li key={index}>{goal}</li>
+                {project.Goal.map((goal, index) => (
+                    <li key={index}>
+                      <span className="font-semibold">{goal.goalName}</span>
+                      {goal.goalDescription && (
+                          <p className="text-sm text-gray-500">{goal.goalDescription}</p>
+                      )}
+                    </li>
                 ))}
               </ul>
             </CardContent>
@@ -137,21 +82,21 @@ export default async function ProjectDetailPage({
             </CardHeader>
             <CardContent>
               <ul className="space-y-4">
-                {project.roadmap.map((item, index) => (
+                {project.Roadmap.map((item, index) => (
                   <li key={index} className="flex items-start space-x-2">
-                    {item.status === "Completed" && (
+                    {item.roadmapStatus === "Completed" && (
                       <CheckCircle2 className="mt-1 h-5 w-5 text-green-500" />
                     )}
-                    {item.status === "In Progress" && (
+                    {item.roadmapStatus === "In Progress" && (
                       <Clock className="mt-1 h-5 w-5 text-yellow-500" />
                     )}
-                    {item.status === "Not Started" && (
+                    {item.roadmapStatus === "Planned" && (
                       <Circle className="mt-1 h-5 w-5 text-gray-300" />
                     )}
                     <div>
-                      <h3 className="font-semibold">{item.milestone}</h3>
+                      <h3 className="font-semibold">{item.roadmap}</h3>
                       <p className="text-sm text-gray-500">
-                        {item.description}
+                        {item.roadmapDescription}
                       </p>
                     </div>
                   </li>
@@ -161,8 +106,8 @@ export default async function ProjectDetailPage({
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>{project.license.name}</CardTitle>
-              <CardDescription>{project.license.description}</CardDescription>
+              <CardTitle>{project.License.name}</CardTitle>
+              <CardDescription>{project.License.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div
@@ -171,35 +116,29 @@ export default async function ProjectDetailPage({
                 }
               >
                 <ul className="space-y-2">
-                  <a className={"text-lg font-bold"}>Permission</a>
-                  {project.license.permission.map((item, index) => (
+                  <span className="text-lg font-bold">Permission</span>
+                  {project.License.permission.split(", ").map((item, index) => (
                     <li key={index} className="flex items-start space-x-1">
-                      <Check className="text-green-500 mt-1 h-4 w-4" />
-                      <div>
-                        <a className={"font-light"}>{item}</a>
-                      </div>
+                      <Check className="mt-1 h-4 w-4 text-green-500" />
+                      <span className="font-light">{item}</span>
                     </li>
                   ))}
                 </ul>
                 <ul className="space-y-2">
-                  <a className={"text-lg font-bold"}>Condition</a>
-                  {project.license.condition.map((item, index) => (
+                  <span className="text-lg font-bold">Condition</span>
+                  {project.License.condition.split(", ").map((item, index) => (
                     <li key={index} className="flex items-start space-x-1">
-                      <Flag className="text-yellow-500 mt-1 h-4 w-4" />
-                      <div>
-                        <a className={"font-light"}>{item}</a>
-                      </div>
+                      <Flag className="mt-1 h-4 w-4 text-yellow-500" />
+                      <span className="font-light">{item}</span>
                     </li>
                   ))}
                 </ul>
                 <ul className="space-y-2">
-                  <a className={"text-lg font-bold"}>Limitation</a>
-                  {project.license.limitation.map((item, index) => (
+                  <span className="text-lg font-bold">Limitation</span>
+                  {project.License.limitation.split(", ").map((item, index) => (
                     <li key={index} className="flex items-start space-x-2">
-                      <OctagonAlert className="text-red-500 mt-1 h-4 w-4" />
-                      <div>
-                        <a className={"font-light"}>{item}</a>
-                      </div>
+                      <OctagonAlert className="mt-1 h-4 w-4 text-red-500" />
+                      <span className="font-light">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -207,12 +146,10 @@ export default async function ProjectDetailPage({
             </CardContent>
           </Card>
           <div className="flex justify-center gap-4">
-            <Button size="lg">Apply to TeamUP with {project.title}</Button>
-            
+            <Button size="lg">Apply to TeamUP with {project.Title}</Button>
+
             <Button size="lg">
-              <Link href={`/project/${params.id}/donate`}>
-                Donate
-              </Link>
+              <Link href={`/project/${params.id}/donate`}>Donate</Link>
             </Button>
           </div>
         </div>
