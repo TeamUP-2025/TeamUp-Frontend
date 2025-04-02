@@ -18,6 +18,15 @@ export default function CreateProjectPage() {
         avatar: "/placeholder.svg?height=40&width=40",
     }
 
+    const sampleOwnerTeamMember = {
+        id: "user-1",
+        name: "Alex Morgan",
+        email: "alex@teamup.com",
+        role: "Owner",
+        avatar: "/placeholder.svg?height=40&width=40",
+        skills: ["Python", "Machine Learning", "Project Management"]
+    }
+
     const [project, setProject] = useState({
         title: "",
         description: "",
@@ -30,7 +39,7 @@ export default function CreateProjectPage() {
     });
 
     const [repositories, setRepositories] = useState([]);
-    const [teamMembers, setTeamMembers] = useState([]);
+    const [teamMembers, setTeamMembers] = useState([sampleOwnerTeamMember]);
     const [joinRequests, setJoinRequests] = useState([]);
 
     // Async function for handling form submission (placeholder)
