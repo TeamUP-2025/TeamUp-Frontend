@@ -6,6 +6,7 @@ import ProjectRepositories from "./project-repository"
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
     // Fetch data on the server
+    
     const project = await getProjectById(params.id)
     const repositories = await getProjectRepositories(params.id)
     const teamMembers = await getProjectTeamMembers(params.id)

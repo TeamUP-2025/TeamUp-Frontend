@@ -11,9 +11,10 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
   if (!authSession.isLoggedIn) {
     redirect("/");
   }
-
+  
   console.log(id);
   const SOCKET_URL = env.SOCKET_URL;
+
 
   return <Chat id={id} socketURL={SOCKET_URL} />;
 }
