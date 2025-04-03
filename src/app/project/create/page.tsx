@@ -7,16 +7,13 @@ import ProjectRepositories from "./project-repository";
 import { Button } from "~/components/ui/button";
 import { toast } from "react-toastify";
 
+import { useRouter } from "next/navigation";
+
 export default function CreateProjectPage() {
+    const router = useRouter();
     // Initialize empty project form state
 
     // todo: get user from current logged in session
-    const sampleOwner = {
-        id: "user-1",
-        name: "Alex Morgan",
-        email: "alex@teamup.com",
-        avatar: "/placeholder.svg?height=40&width=40",
-    }
 
     const [project, setProject] = useState({
         title: "",
@@ -25,10 +22,11 @@ export default function CreateProjectPage() {
         tags: [],
         roadmap: [],
         goals: [],
-        license: { name: "" },
-        owner:sampleOwner,
+        license: {},
+
     });
 
+    // const 
     const [repositories, setRepositories] = useState([]);
 
     // Async function for handling form submission (placeholder)
@@ -48,12 +46,12 @@ export default function CreateProjectPage() {
 
             const newProject = await response.json();
             setProject(newProject);
+            toast.success(`Created Project ${newProject.title}`);
+            // todo: redirect to new project page
+            router.push(`/project/${newProject.id}`);
         } catch (error) {
             console.error("Error creating project:", error);
         }
-        toast.success(`Created Project ${newProject.title}`);
-        // todo: redirect to new project page
-        router.push(`/project/${newProject.id}`);
 
     }
 
@@ -64,16 +62,14 @@ export default function CreateProjectPage() {
                     {/* Project details form */}
                     <ProjectDetails project={project} setProject={setProject} />
                     
-                    {/*todo: current userform*/}
-
                     {/* Repositories form */}
                     <ProjectRepositories repositories={repositories} setRepositories={setRepositories}/>
                 </div>
 
                 {/* Client component with interactive elements */}
                 <ProjectDashboardClient
-                    initialProject={project}
-                    initialRepositories={repositories}
+                    project={project} setProject={setProject}
+                    repositories={repositories} setRepositories={setRepositories}
                 />
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3 mt-5 px-8">
                     <Button onClick={handleCreateProject}>Create</Button>

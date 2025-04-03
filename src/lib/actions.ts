@@ -8,6 +8,13 @@ export async function updateProject(projectId, projectData) {
     return { success: true }
 }
 
+export async function createProject(projectData) {
+    // Here you would create the project in your database
+    console.log(`creating project with data:`, projectData)
+    // Return success
+    return { success: true }
+}
+
 // Repository actions
 export async function connectRepository(projectId, repo) {
     console.log(`Connecting repository ${repo.name} to project ${projectId}`)
@@ -60,5 +67,27 @@ export async function approveRequest(projectId, requestId) {
 
 export async function denyRequest(projectId, requestId) {
     console.log(`Denying join request ${requestId} for project ${projectId}`)
+    return { success: true }
+}
+
+//LICENSE actions
+export async function chooseLICENSE(projectId, LICENSEId) {
+    console.log(`choose LICENSE ${LICENSEId} for project ${projectId}`)
+    return { success: true }
+}
+
+//Roadmap actions
+export async function addRoadmap(projectId, roadmapText) {
+    console.log(`Adding roadmap "${roadmapText}" to project ${projectId}`)
+    return { success: true }
+}
+
+export async function updateRoadmap(projectId, roadmapIndex, newText) {
+    console.log(`Updating roadmap ${roadmapIndex} in project ${projectId} to "${newText}"`)
+    return { success: true }
+}
+
+export async function removeRoadmap(projectId, roadmapIndex) {
+    console.log(`Removing roadmap ${roadmapIndex} from project ${projectId}`)
     return { success: true }
 }

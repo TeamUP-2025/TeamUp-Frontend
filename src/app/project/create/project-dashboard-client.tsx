@@ -1,38 +1,24 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 import { Clock, CheckCircle2, Users, UserPlus } from "lucide-react"
-import ProjectRoadmap from "./project-roadmap"
+import CreateProjectRoadmap from "./project-roadmap"
 import ProjectGoals from "./project-goal"
 import { updateMilestoneStatus} from "~/lib/actions"
-import ProjectLICENSE from "./LICENSE"
+import ProjectLICENSE from "./project-LICENSE"
 
 export default function ProjectDashboardClient({
-                                                   initialProject,
-                                                   initialRepositories,
-                                               }) {
-    const [project, setProject] = useState(initialProject)
+    project, 
+    setProject, 
+    repositories, 
+    setRepositories
+}) {
 
-    // Milestone status update handler
-    const handleMilestoneStatusUpdate = async (index, newStatus) => {
-        try {
-            const updatedRoadmap = [...project.roadmap]
-            updatedRoadmap[index] = {
-                ...updatedRoadmap[index],
-                status: newStatus,
-            }
-
-            await updateMilestoneStatus(project.id, index, newStatus)
-
-            setProject((prev) => ({
-                ...prev,
-                roadmap: updatedRoadmap,
-            }))
-        } catch (error) {
-            console.error("Failed to update milestone status:", error)
-        }
-    }
+    //project attributes
+    const [roadmap, setRoadmap] = useState(project.roadmap)
+    const [goal, setGoal] = useState(project.goal)
+    const [license, setLicense] = useState(project.license)
 
 
     return (
@@ -54,7 +40,7 @@ export default function ProjectDashboardClient({
                 </TabsList>
 
                 <TabsContent value="roadmap" className="mt-4">
-                    <ProjectRoadmap
+                    <CreateProjectRoadmap
                         roadmap={project.roadmap}
                     />
                 </TabsContent>
@@ -64,7 +50,7 @@ export default function ProjectDashboardClient({
                 </TabsContent>
 
                 <TabsContent value="LICENSE" className="mt-4">
-                    <ProjectLICENSE />
+                    <ProjectLICENSE license={license} setLicense={setLicense}/>
                 </TabsContent>
                 
             </Tabs>

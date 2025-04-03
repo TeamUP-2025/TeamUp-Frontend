@@ -3,8 +3,9 @@ import { Badge } from "~/components/ui/badge"
 import { Progress } from "~/components/ui/progress"
 import { CheckCircle2, Circle, Clock } from "lucide-react"
 import RoadmapStatusControl from "./roadmap-status-control"
+import RoadmapsEditor from "./roadmap-editor"
 
-export default function ProjectRoadmap({ roadmap, progress }) {
+export default function CreateProjectRoadmap({ roadmap }) {
     return (
         <Card>
             <CardHeader>
@@ -12,6 +13,9 @@ export default function ProjectRoadmap({ roadmap, progress }) {
                 <CardDescription>Track progress through project milestones</CardDescription>
             </CardHeader>
             <CardContent>
+                <div className="space-y-4">
+                    <RoadmapsEditor initialRoadmaps={roadmap}/>
+                
                 <div className="space-y-8">
                     {roadmap.map((milestone, index) => (
                         <div key={index} className="relative">
@@ -59,6 +63,7 @@ export default function ProjectRoadmap({ roadmap, progress }) {
                             </div>
                         </div>
                     ))}
+                </div>
                 </div>
             </CardContent>
         </Card>
