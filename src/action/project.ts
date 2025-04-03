@@ -1,6 +1,5 @@
 "use server";
-import { project, projectArray } from "~/schema/project_schema";
-import { z } from "zod";
+import { project, searchProjectArray } from "~/schema/project_schema";
 
 type SearchParams = {
   title?: string;
@@ -29,9 +28,10 @@ export async function getProject(params?: SearchParams) {
     }
   }
 
-  const project = await fetch(`http://localhost:8080/project${queryString}`);
+  const project = await fetch(`http://localhost:8080/project/${queryString}`);
   const data = await project.json();
-  const parseData = projectArray.safeParse(data);
+  const parseData = searchProjectArray.safeParse(data);
+  console.log(data);
   if (!parseData.success) {
     console.log("Failed to parse project data:", parseData.error.message);
     // Return an empty array if parsing fails
@@ -55,14 +55,29 @@ function parseBase64JsonAction(base64EncodedString: string) {
   }
 }
 
-export async function requestJoinProject(projectID: string, coverLetter: string) {
-  // const projectfromID = await fetch(
-  //   `http://localhost:8080/project/${projectID}/join`,
-  // );
+export async function requestJoinProject(
+  projectID: string,
+  uID: string,
+  coverLetter: string,
+) {
+  const projectfromID = await fetch(
+    `http://localhost:8080/project/${projectID}/join`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        projectId: projectID,
+        coverLetter: coverLetter,
+        uID: uID,
+      }),
+    },
+  );
 
-  // const data = await projectfromID.json();
-  console.log(projectID, coverLetter)
-  return "nice"
+  const data = await projectfromID.json();
+  console.log(projectID, coverLetter, data);
+  return data;
 }
 
 export async function getProjectByID(projectID: string) {
@@ -73,15 +88,31 @@ export async function getProjectByID(projectID: string) {
   );
   const data = await projectfromID.json();
 
+  // console.log(data);
+
   const parsedLicense = parseBase64JsonAction(data.License);
   const extractLicnse = parsedLicense[0];
-  const parsedGoal = parseBase64JsonAction(data.Goal);
-  const parsedRoadmap = parseBase64JsonAction(data.Roadmap);
 
-  // console.log(parsedGoal)
-  // console.log(parsedLicense)
-  // console.log(parsedRoadmap);
-  // console.log(data);
+  let parsedGoal = [];
+  let parsedRoadmap = [];
+
+  if (data.Goal) {
+    try {
+      parsedGoal = parseBase64JsonAction(data.Goal);
+    } catch (error) {
+      console.error("Error parsing Goal:", error);
+      parsedGoal = [];
+    }
+  }
+
+  if (data.Roadmap) {
+    try {
+      parsedRoadmap = parseBase64JsonAction(data.Roadmap);
+    } catch (error) {
+      console.error("Error parsing Roadmap:", error);
+      parsedRoadmap = [];
+    }
+  }
 
   const data_with_license_goal = {
     ID: data.Projectid,
@@ -107,7 +138,7 @@ export async function getProjectByID(projectID: string) {
     Tag: data.Tag,
   };
 
-  console.log(data_with_license_goal)
+  console.log(data_with_license_goal);
 
   const parseData = project.safeParse(data_with_license_goal);
   if (!parseData.success) {
