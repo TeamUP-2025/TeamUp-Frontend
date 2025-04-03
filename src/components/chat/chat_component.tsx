@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef, use } from "react";
+import { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import { env } from "~/env";
 import {
   Card,
   CardHeader,
@@ -22,11 +21,7 @@ export default function Chat({
   socketURL: string;
 }) {
   const [messages, setMessages] = useState<
-    Array<{
-      userId: string;
-      message: string;
-      timestamp: Date;
-    }>
+    Array<{ userId: string; message: string; timestamp: Date }>
   >([]);
   const auth = useAuth();
   const [messageInput, setMessageInput] = useState("");
@@ -34,25 +29,20 @@ export default function Chat({
   const [roomId, setRoomId] = useState(id);
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState("");
-  const [currentUserId, setCurrentUserId] = useState<string>("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [currentUserId, setCurrentUserId] = useState<string>(auth.login);
+  // Ref for the scrollable chat box container
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // Connect to socket server
   useEffect(() => {
-    const newSocket = io(socketURL, {
-      withCredentials: true,
-    });
+    const newSocket = io(socketURL, { withCredentials: true });
 
     newSocket.on("connect", () => {
       console.log("Connected to socket server");
       setConnected(true);
       setError("");
-
-      // For demo purposes, generate a random user ID if not set
-      setCurrentUserId(
-        localStorage.getItem("userId") ||
-          `user-${Math.floor(Math.random() * 1000)}`,
-      );
+      // Always use auth.login so that it’s consistent with joinRoom.
+      setCurrentUserId(auth.login);
     });
 
     newSocket.on("connect_error", (err) => {
@@ -67,6 +57,7 @@ export default function Chat({
     });
 
     newSocket.on("message", (message) => {
+      console.log(message);
       if (typeof message === "string") {
         // System message
         setMessages((prev) => [
@@ -83,34 +74,40 @@ export default function Chat({
 
     // Clean up on unmount
     return () => {
-      if (newSocket) {
-        newSocket.disconnect();
-      }
+      newSocket.disconnect();
     };
-  }, []);
+  }, [socketURL, auth.login]);
 
   // Join room when socket is available and roomId changes
   useEffect(() => {
+    console.log(socket, connected, roomId);
     if (socket && connected && roomId) {
       // Leave previous room if any
       socket.emit("leaveRoom", roomId);
 
-      // Join new room
-      socket.emit("joinRoom", roomId);
+      // Join new room using auth.login consistently
+      socket.emit("joinRoom", roomId, auth.login);
 
       // Clear messages when changing rooms
       setMessages([]);
     }
-  }, [socket, connected, roomId]);
+  }, [socket, connected, roomId, auth.login]);
 
-  // Auto-scroll to bottom when new messages arrive
+  
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages]);
+
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (messageInput.trim() && socket && connected) {
+      // Send the message without adding a userId payload, as the server sets it on join
       socket.emit("chatMessage", {
         roomId,
         message: messageInput,
@@ -142,13 +139,17 @@ export default function Chat({
             </CardHeader>
 
             {error && (
-              <div className="mx-4 mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+              <div className="mx-4 mb-4 rounded border border-red-400 bg-red-100 
+                px-4 py-3 text-red-700">
                 {error}
               </div>
             )}
 
             <CardContent>
-              <div className="mb-4 h-[60vh] overflow-y-auto rounded-md border bg-slate-50 p-4">
+              <div
+                ref={chatContainerRef}
+                className="mb-4 h-[60vh] overflow-y-auto rounded-md border bg-slate-50 p-4"
+              >
                 {messages.length === 0 ? (
                   <div className="flex h-full items-center justify-center text-center text-muted-foreground">
                     No messages yet. Start the conversation!
@@ -161,8 +162,8 @@ export default function Chat({
                         msg.userId === "system"
                           ? "text-center italic text-muted-foreground"
                           : msg.userId === currentUserId
-                            ? "text-right"
-                            : "text-left"
+                          ? "text-right"
+                          : "text-left"
                       }`}
                     >
                       {msg.userId !== "system" && (
@@ -190,7 +191,6 @@ export default function Chat({
                     </div>
                   ))
                 )}
-                <div ref={messagesEndRef} />
               </div>
 
               <form onSubmit={sendMessage} className="flex gap-2">
