@@ -138,11 +138,29 @@ export async function getProjectByID(projectID: string) {
     Tag: data.Tag,
   };
 
-  console.log(data_with_license_goal);
-
   const parseData = project.safeParse(data_with_license_goal);
   if (!parseData.success) {
     throw new Error("Failed to parse project data");
   }
   return parseData.data;
 }
+
+export async function updateProjectDetail(projectId, title, description, tag) {
+  "use server";
+  const projectupdate = await fetch(
+      `http://localhost:8080/project/update/${projectId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectId: projectId,
+          title: title,
+          description: description,
+          tags: tag
+        }),
+      },
+  );
+}
+

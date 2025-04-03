@@ -7,6 +7,7 @@ import { Input } from "~/components/ui/input"
 import { Textarea } from "~/components/ui/textarea"
 import { Badge } from "~/components/ui/badge"
 import { updateProject } from "~/lib/actions"
+import {getProject, getProjectByID, updateProjectDetail} from "~/action/project";
 
 export default function EditProject({ projectId }) {
     const [isEditing, setIsEditing] = useState(false)
@@ -19,8 +20,7 @@ export default function EditProject({ projectId }) {
             try {
                 setLoading(true)
                 // Fetch project data
-                const response = await fetch(`/api/projects/${projectId}`)
-                const data = await response.json()
+                const data = getProjectByID(projectId)
                 setProject(data)
                 setLoading(false)
             } catch (error) {
@@ -43,7 +43,7 @@ export default function EditProject({ projectId }) {
     const saveChanges = async () => {
         try {
             setLoading(true)
-            await updateProject(projectId, project)
+            await updateProjectDetail(project)
             setIsEditing(false)
             setLoading(false)
             // Force page refresh to show updated data
