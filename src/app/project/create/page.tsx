@@ -18,15 +18,6 @@ export default function CreateProjectPage() {
         avatar: "/placeholder.svg?height=40&width=40",
     }
 
-    const sampleOwnerTeamMember = {
-        id: "user-1",
-        name: "Alex Morgan",
-        email: "alex@teamup.com",
-        role: "Owner",
-        avatar: "/placeholder.svg?height=40&width=40",
-        skills: ["Python", "Machine Learning", "Project Management"]
-    }
-
     const [project, setProject] = useState({
         title: "",
         description: "",
@@ -39,29 +30,31 @@ export default function CreateProjectPage() {
     });
 
     const [repositories, setRepositories] = useState([]);
-    const [teamMembers, setTeamMembers] = useState([sampleOwnerTeamMember]);
-    const [joinRequests, setJoinRequests] = useState([]);
 
     // Async function for handling form submission (placeholder)
     async function handleCreateProject() {
         try {
-            const response = await fetch("/api/projects", {
+            const response = await fetch(`/api/projects`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(project),
+                //  + current_user + repositories
             });
+            console.log(JSON.stringify(project))
 
             if (!response.ok) {
                 throw new Error("Failed to create project");
             }
 
             const newProject = await response.json();
-            setProject(newProject); // Update state after creation
+            setProject(newProject);
         } catch (error) {
             console.error("Error creating project:", error);
         }
-        toast.success(`Created Project ${project.title}`);
+        toast.success(`Created Project ${newProject.title}`);
         // todo: redirect to new project page
+        router.push(`/project/${newProject.id}`);
+
     }
 
     return (
@@ -70,17 +63,17 @@ export default function CreateProjectPage() {
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
                     {/* Project details form */}
                     <ProjectDetails project={project} setProject={setProject} />
+                    
+                    {/*todo: current userform*/}
 
-                    {/* Empty Repositories Section */}
-                    <ProjectRepositories repositories={repositories} />
+                    {/* Repositories form */}
+                    <ProjectRepositories repositories={repositories} setRepositories={setRepositories}/>
                 </div>
 
                 {/* Client component with interactive elements */}
                 <ProjectDashboardClient
                     initialProject={project}
                     initialRepositories={repositories}
-                    initialTeamMembers={teamMembers}
-                    initialJoinRequests={joinRequests}
                 />
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3 mt-5 px-8">
                     <Button onClick={handleCreateProject}>Create</Button>

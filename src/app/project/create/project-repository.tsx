@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Github } from "lucide-react"
 import RepositoryActions from "./repository-actions"
 
-export default function ProjectRepositories({ repositories }) {
+export default function ProjectRepositories({ repositories, setRepositories }) {
     return (
         <Card>
             <CardHeader className="pb-2">

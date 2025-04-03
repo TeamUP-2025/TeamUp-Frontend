@@ -61,15 +61,6 @@ export default function ProjectRoadmap({ roadmap, progress }) {
                     ))}
                 </div>
             </CardContent>
-            <CardFooter>
-                <div className="w-full">
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Overall Progress</span>
-                        <span className="text-sm text-muted-foreground">{progress}%</span>
-                    </div>
-                    <Progress value={progress} className="mt-2" />
-                </div>
-            </CardFooter>
         </Card>
     )
 }
