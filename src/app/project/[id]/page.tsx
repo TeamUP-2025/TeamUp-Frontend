@@ -18,7 +18,9 @@ import {
   Flag,
   OctagonAlert,
 } from "lucide-react";
+import JoinProjectPage  from "./join-form"
 import { getProject, getProjectByID } from "~/action/project";
+import { useAuth } from "~/context/AuthContext";
 
 export default async function ProjectDetailPage({
   params,
@@ -29,8 +31,6 @@ export default async function ProjectDetailPage({
   const project = await getProjectByID(
       id
   );
-
-  console.log(project);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -145,11 +145,14 @@ export default async function ProjectDetailPage({
               </div>
             </CardContent>
           </Card>
-          <div className="flex justify-center gap-4">
-            <Button size="lg">Apply to TeamUP with {project.Title}</Button>
 
+          <div className="flex justify-center gap-4">
+            <JoinProjectPage project={project} />
+            
             <Button size="lg">
-              <Link href={`/project/${params.id}/donate`}>Donate</Link>
+              <Link href={`/project/${id}/donate`}>
+                Donate
+              </Link>
             </Button>
           </div>
         </div>

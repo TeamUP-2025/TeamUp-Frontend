@@ -25,3 +25,12 @@ export const project = z.object({
 });
 
 export const projectArray = z.array(project);
+
+export const searchProjectArray = z.array(z.object({
+  ID: z.coerce.string(),
+  Title: z.coerce.string(),
+  Description: z.coerce.string(),
+  Status: z.string().nullable().optional(),
+  License: z.coerce.string(),
+  Tags: z.array(z.coerce.string()).default([]),
+}))
