@@ -54,21 +54,24 @@ export default function Chat({
   const [hasMoreHistory, setHasMoreHistory] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
-  // This ref indicates if the next history request is a pagination (older messages)
+  // Ref to determine if we are paginating (loading older messages)
   const isPaginatingRef = useRef<boolean>(false);
-  // Save scroll height before merging older messages so we can adjust scroll position.
+  // Ref to capture scroll height before updating messages during pagination
   const scrollHeightBeforeUpdateRef = useRef<number>(0);
+  // Ref to track initial load.
+  const initialLoadRef = useRef<boolean>(true);
 
-  // When the room id changes, reset state.
+  // Reset chat state when room id changes.
   useEffect(() => {
     setRoomId(id);
     setMessages([]);
     setHasMoreHistory(false);
     setError("");
+    initialLoadRef.current = true; // Reset for new room
     console.log("Room ID prop changed, updating state to:", id);
   }, [id]);
 
-  // Setup the socket connection and its events.
+  // Setup socket connection and events.
   useEffect(() => {
     console.log("Setting up socket connection to:", socketURL);
     const newSocket = io(socketURL, { withCredentials: true });
@@ -97,7 +100,7 @@ export default function Chat({
       setError(errorMessage);
     });
 
-    // Incoming single message
+    // Listen for real‑time new message.
     newSocket.on("message", (message) => {
       console.log("Received message:", message);
       const newMessage: ChatMessage =
@@ -107,19 +110,18 @@ export default function Chat({
       setMessages((prev) => [...prev, newMessage]);
     });
 
-    // When the socket successfully joins a room, request the latest history.
+    // When joined, request history.
     newSocket.on("joinedRoom", (joinedRoomId: string) => {
       console.log(
         `Successfully joined room: ${joinedRoomId}. Requesting history.`
       );
-      // Request latest messages (initial load)
       newSocket.emit("requestHistory", {
         roomId: joinedRoomId,
         beforeTimestamp: null,
       });
     });
 
-    // Handle the chat history event from the server.
+    // Handle incoming chat history.
     newSocket.on("chatHistory", (data: ChatHistoryPayload) => {
       console.log("Received chat history:", data);
       if (data.roomId === roomId) {
@@ -130,13 +132,12 @@ export default function Chat({
           timestamp: new Date(msg.timestamp),
         }));
 
-        // If we're paginating (older messages request), merge them;
-        // otherwise, it's an initial load.
         if (isPaginatingRef.current) {
           const container = chatContainerRef.current;
-          const currScroll = container?.scrollTop || 0;
+          const currScrollTop = container?.scrollTop || 0;
           scrollHeightBeforeUpdateRef.current = container?.scrollHeight || 0;
 
+          // Merge older messages (prepend them)
           setMessages((prevMessages) => {
             const existingIds = new Set(
               prevMessages
@@ -146,26 +147,30 @@ export default function Chat({
             const uniqueNewMessages = historyMessages.filter(
               (msg) => !msg.messageId || !existingIds.has(msg.messageId)
             );
-            // Prepend the new older messages.
             return [...uniqueNewMessages, ...prevMessages];
           });
 
-          // Restore the scroll position relative to the new total height.
+          // Restore scroll position relative to new height.
           setTimeout(() => {
             if (container) {
               const newScrollHeight = container.scrollHeight;
               const heightDiff =
                 newScrollHeight - scrollHeightBeforeUpdateRef.current;
-              container.scrollTop = currScroll + heightDiff;
+              container.scrollTop = currScrollTop + heightDiff;
             }
           }, 0);
-          // Reset the pagination flag.
           isPaginatingRef.current = false;
         } else {
-          // Initial load: replace the entire message list.
+          // Initial load: replace messages and scroll to bottom.
           setMessages(historyMessages);
+          setTimeout(() => {
+            const container = chatContainerRef.current;
+            if (container) {
+              container.scrollTo({ top: container.scrollHeight });
+            }
+            initialLoadRef.current = false;
+          }, 0);
         }
-
         setHasMoreHistory(data.hasMore);
         setLoadingHistory(false);
       }
@@ -181,28 +186,26 @@ export default function Chat({
     };
   }, [socketURL, auth.login, roomId]);
 
-  // Do not clear messages when rejoining—just emit the join event.
+  // Do not reset messages when rejoining; simply emit joinRoom.
   useEffect(() => {
     if (socket && connected && roomId && auth.login) {
       console.log(
         `Ensuring join for room ${roomId} as user ${auth.login}. Socket connected: ${connected}`
       );
       socket.emit("joinRoom", roomId, auth.login);
-      // Do not reset messages here.
     }
   }, [socket, connected, roomId, auth.login]);
 
-  // Auto-scroll to the bottom when new messages come in (but not when paginating)
+  // Auto-scroll effect: on new (non‑pagination) messages, always scroll to the bottom.
   useEffect(() => {
-    if (chatContainerRef.current && !loadingHistory) {
-      chatContainerRef.current.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
+    const container = chatContainerRef.current;
+    if (!container || loadingHistory) return;
+
+    // If we are not paginating, always scroll to bottom.
+    container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
   }, [messages, loadingHistory]);
 
-  // When scrolling near the top, trigger a load of older messages (if available).
+  // Listen for scroll events to trigger older messages loading.
   useEffect(() => {
     const container = chatContainerRef.current;
     if (!container) return;
@@ -222,7 +225,7 @@ export default function Chat({
     return () => container.removeEventListener("scroll", handleScroll);
   }, [hasMoreHistory, loadingHistory, messages.length]);
 
-  // Function to load older messages.
+  // Function to load older (paginated) messages.
   const loadOlderMessages = () => {
     if (
       !socket ||
@@ -233,7 +236,6 @@ export default function Chat({
     )
       return;
 
-    // Identify the oldest message.
     const oldestMessage = [...messages].sort(
       (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
     )[0];
@@ -241,27 +243,20 @@ export default function Chat({
     if (!oldestMessage) return;
 
     console.log("Loading older messages before:", oldestMessage.timestamp);
-    
-    // Set our pagination flag and loading indicator.
     isPaginatingRef.current = true;
     setLoadingHistory(true);
-
-    // Request older messages.
     socket.emit("requestHistory", {
       roomId,
       beforeTimestamp: oldestMessage.timestamp.toISOString(),
     });
   };
 
-  // Sending a chat message.
+  // Function to send a new message.
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (messageInput.trim() && socket && connected && roomId) {
       console.log(`Sending message to room ${roomId}: ${messageInput}`);
-      socket.emit("chatMessage", {
-        roomId,
-        message: messageInput,
-      });
+      socket.emit("chatMessage", { roomId, message: messageInput });
       setMessageInput("");
     }
   };
@@ -274,7 +269,7 @@ export default function Chat({
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  Project Chat (Room: {roomId})
+                  Project Chat
                 </CardTitle>
                 <CardDescription>
                   {connected ? (
