@@ -44,14 +44,9 @@ export default function ProjectDetails({ project }) {
                             </div>
                             <div>
                                 <label className="text-sm font-medium leading-none">
-                                    Short Description
+                                    Description
                                 </label>
                                 <p className="mt-1 text-sm text-muted-foreground">{project.Description}</p>
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium leading-none">
-                                    Detailed Description
-                                </label>
                             </div>
                             <div>
                                 <label className="text-sm font-medium leading-none">

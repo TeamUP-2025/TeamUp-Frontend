@@ -7,7 +7,7 @@ import { Input } from "~/components/ui/input"
 import { Textarea } from "~/components/ui/textarea"
 import { Badge } from "~/components/ui/badge"
 import { updateProject } from "~/lib/actions"
-import {getProject, getProjectByID, updateProjectDetail} from "~/action/project";
+import { getProjectByID, updateProjectDetail} from "~/action/project";
 
 export default function EditProject({ projectId }) {
     const [isEditing, setIsEditing] = useState(false)
@@ -43,7 +43,7 @@ export default function EditProject({ projectId }) {
     const saveChanges = async () => {
         try {
             setLoading(true)
-            await updateProjectDetail(project)
+            await updateProjectDetail(projectId)
             setIsEditing(false)
             setLoading(false)
             // Force page refresh to show updated data
@@ -122,7 +122,7 @@ export default function EditProject({ projectId }) {
                                     <label className="text-sm font-medium">Project Title</label>
                                     <Input
                                         name="title"
-                                        value={project.title}
+                                        value={project.Title}
                                         onChange={handleInputChange}
                                         className="mt-1"
                                     />
@@ -132,26 +132,17 @@ export default function EditProject({ projectId }) {
                                     <label className="text-sm font-medium">Short Description</label>
                                     <Textarea
                                         name="description"
-                                        value={project.description}
+                                        value={project.Description}
                                         onChange={handleInputChange}
                                         className="mt-1 min-h-[100px]"
                                     />
                                 </div>
 
-                                <div>
-                                    <label className="text-sm font-medium">Detailed Description</label>
-                                    <Textarea
-                                        name="longDescription"
-                                        value={project.longDescription}
-                                        onChange={handleInputChange}
-                                        className="mt-1 min-h-[200px]"
-                                    />
-                                </div>
 
                                 <div>
                                     <label className="text-sm font-medium">Tags</label>
                                     <div className="mt-1 flex flex-wrap gap-2">
-                                        {project.tags.map((tag, index) => (
+                                        {project.Tag.map((tag, index) => (
                                             <Badge key={tag} variant="secondary" className="flex items-center gap-1 pr-1">
                                                 {tag}
                                                 <Button
