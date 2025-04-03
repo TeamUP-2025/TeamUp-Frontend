@@ -2,13 +2,12 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { cookies } from 'next/headers';
-import Link from "next/link";
-import { Github } from "lucide-react";
+import { cookies } from "next/headers";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { logoutAction } from "~/action/logout";
-
+import { AuthProvider, useAuth } from "~/context/AuthContext";
+import NavBar from "~/components/ui/NavBar";
+import { getServerAuthSession } from "~/lib/auth";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -19,63 +18,18 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value; // undefined if not set
+  const authData = await getServerAuthSession();
 
-  const userIsSignedIn = Boolean(token);
 
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <NavBar userIsSignedIn={userIsSignedIn} />
-        {children}
-        <ToastContainer position="top-center" autoClose={3000} />
+        <AuthProvider initialAuthState={authData}>
+          <NavBar />
+          {children}
+          <ToastContainer position="top-center" autoClose={3000} />
+        </AuthProvider>
       </body>
     </html>
-  );
-}
-
-function NavBar({ userIsSignedIn }: { userIsSignedIn: boolean }) {
-  return (
-    <header className="px-4 lg:px-6 h-14 flex items-center border-b">
-      <Link className="flex items-center justify-center" href="/">
-        <Github className="h-6 w-6 mr-2"/>
-        <span className="font-bold">TeamUP</span>
-      </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6">
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/">
-          Home
-        </Link>
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/index">
-          Browse
-        </Link>
-        <Link className="text-sm font-medium hover:underline underline-offset-4" href="/my-project">
-          My Projects
-        </Link>
-        {userIsSignedIn ? (
-          <>
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="/profile">
-              Profile
-            </Link>
-            <form action={logoutAction} className="text-sm font-medium hover:underline underline-offset-4">
-        <button
-          type="submit"
-          className=""
-        >
-          Logout
-        </button>
-      </form>
-
-          </>
-        ) : (
-          <>
-            <Link className="text-sm font-medium hover:underline underline-offset-4" href="http://localhost:8080/auth/github">
-              Login
-            </Link>
-          </>
-        )}
-        
-      </nav>
-    </header>
   );
 }
