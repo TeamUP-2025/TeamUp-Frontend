@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { z } from "zod";
+import { requestJoinProject } from "~/action/project";
 import { Button } from "~/components/ui/button";
+import { useAuth } from "~/context/AuthContext";
+import {  project as p} from "~/schema/project_schema";
 
 
-export default function JoinProjectPage({ project }) {
+export default function JoinProjectPage({ project } : { project : z.infer<typeof p>}) {
+  const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-
-  // mock GitHub user data
-  const githubUser = {
-    username: "mockuser123",
-    avatar: "https://github.com/github.png",
-    profileUrl: "https://github.com/mockuser123",
-  };
+  const [isDisable, setIsDisable] = useState(!auth.isLoggedIn);
+  const [coverLetter, setCoverLetter] = useState("");
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -25,38 +25,44 @@ export default function JoinProjectPage({ project }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // todo: add user to userproject db
+    
+   await requestJoinProject(project.ID, coverLetter)
 
-    toast.success(`Join request sent to project ${project.title}`);
+   const sucess = true;
+
+   if (sucess) {
+    toast.success(`Join request sent to project ${project.Title}`);
+   }  else {
+    toast.error(`You are already an member`)
+   } 
+  //  else {
+  //   toast.error(`The request is already existed.`)
+  //  }
+
+    // setIsDisable(true)
     handleClose(); 
   };
 
   return (
     <>
-      <Button size="lg" onClick={handleOpen}>Apply to TeamUP with {project.title}</Button>
+      <Button size="lg" onClick={handleOpen} disabled={isDisable}>Apply to TeamUP with {project.Title}</Button>
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">
-              Join {project.title} as {githubUser.username}?
+              Join {project.Title} as {auth.login}?
             </h2>
-            <div className="flex items-center space-x-4 border p-4 rounded-lg">
-              <img
-                src={githubUser.avatar}
-                alt="GitHub Avatar"
-                className="w-12 h-12 rounded-full"
+            <div className="mt-4">
+              <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700 mb-1">
+                Introduce yourself
+              </label>
+              <textarea
+                id="coverLetter"
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
+                placeholder="Tell the project owner about yourself and why you want to join..."
+                className="w-full p-2 border border-gray-300 rounded-md h-32 focus:ring-blue-500 focus:border-blue-500"
               />
-              <div>
-                <p className="font-medium">{githubUser.username}</p>
-                <a
-                  href={githubUser.profileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
-                >
-                  View GitHub Profile
-                </a>
-              </div>
             </div>
             <div className="flex justify-center mt-4">
               <button
