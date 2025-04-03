@@ -1,5 +1,6 @@
 "use server";
 import { project, searchProjectArray } from "~/schema/project_schema";
+import {z} from "zod"
 
 type SearchParams = {
   title?: string;
@@ -145,22 +146,47 @@ export async function getProjectByID(projectID: string) {
   return parseData.data;
 }
 
-export async function updateProjectDetail(projectId, title, description, tag) {
-  "use server";
-  const projectupdate = await fetch(
-      `http://localhost:8080/project/update/${projectId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          projectId: projectId,
-          title: title,
-          description: description,
-          tags: tag
-        }),
-      },
-  );
-}
+export async function updateProjectDetail(
+  projectId: string,
+  title: string,
+  description: string,
+  tags: string[], // Changed 'tag' to 'tags' for clarity, matches body key
+): Promise<z.infer<typeof project>> { // Return the Zod type
+  // "use server"; // Not needed inside the function
 
+  const response = await fetch(
+    `http://localhost:8080/project/update`, // Correct endpoint
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // Ensure keys match the backend Go struct tags (`json:"..."`)
+        projectId: projectId,
+        title: title,
+        description: description,
+        tags: tags, // Key is 'tags'
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    // Handle errors from the update request
+    const errorText = await response.text();
+    console.error(`Failed to update project ${projectId}: ${response.status} ${errorText}`);
+    throw new Error(`Failed to update project (status: ${response.status})`);
+  }
+
+  // --- Re-fetch the updated project data ---
+  // After a successful update, call getProjectByID to get the fresh data
+  try {
+    const updatedProjectData = await getProjectByID(projectId);
+    return updatedProjectData; // Return the newly fetched, parsed, and validated data
+  } catch (fetchError) {
+    console.error(`Failed to re-fetch project ${projectId} after update:`, fetchError);
+    // Decide how to handle this: maybe throw a different error,
+    // or return the old data (less ideal)
+    throw new Error(`Project updated, but failed to fetch updated details.`);
+  }
+}
