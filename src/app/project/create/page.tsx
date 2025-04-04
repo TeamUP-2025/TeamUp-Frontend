@@ -10,12 +10,8 @@ import { Clock, CheckCircle2, FileText } from "lucide-react";
 // Import components
 import { ProjectDetails } from "./components/ProjectDetails";
 import { ProjectRepositories } from "./components/ProjectRepositories";
-import {
-  CreateProjectRoadmap,
-  RoadmapsEditor,
-  RoadmapStatusControl,
-} from "./components/Roadmap";
-import { ProjectGoals, GoalsEditor } from "./components/Goals";
+import { CreateProjectRoadmap } from "./components/Roadmap";
+import { ProjectGoals } from "./components/Goals";
 import { ProjectLICENSE } from "./components/License";
 
 // Import types

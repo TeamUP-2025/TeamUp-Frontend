@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { Github, Plus, Trash } from "lucide-react";
 import {
@@ -24,13 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-
-// Sample repositories - in a real app, these would come from an API
-const sampleRepos = [
-  { id: "repo1", name: "project-frontend", owner: "teamup" },
-  { id: "repo2", name: "project-backend", owner: "teamup" },
-  { id: "repo3", name: "project-docs", owner: "teamup" },
-];
+import { getRepoByUid } from "~/action/repo";
 
 // Project Repository Component
 export function ProjectRepositories({
@@ -65,9 +59,9 @@ export function ProjectRepositories({
                   <div className="flex items-center space-x-3">
                     <Github className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="font-medium">{repository.name}</p>
+                      <p className="font-medium">{repository.Name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {repository.owner}/{repository.name}
+                        {repository.owner?.login || "Unknown"}/{repository.Name}
                       </p>
                     </div>
                   </div>
@@ -120,13 +114,29 @@ export function RepositoryActions({
   const [selectedRepo, setSelectedRepo] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [repositories, setRepositories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchRepositories = async () => {
+      try {
+        const repos = await getRepoByUid();
+        setRepositories(repos);
+      } catch (error) {
+        console.error("Failed to fetch repositories:", error);
+      }
+    };
+
+    if (isOpen) {
+      fetchRepositories();
+    }
+  }, [isOpen]);
 
   const handleConnectRepo = async () => {
     if (!selectedRepo) return;
 
     try {
       setLoading(true);
-      const repo = sampleRepos.find((r) => r.id === selectedRepo);
+      const repo = repositories.find((r) => r.Repoid === selectedRepo);
 
       if (repo) {
         setRepository(repo);
@@ -163,9 +173,9 @@ export function RepositoryActions({
               <SelectValue placeholder="Select a repository" />
             </SelectTrigger>
             <SelectContent>
-              {sampleRepos.map((repo) => (
-                <SelectItem key={repo.id} value={repo.id}>
-                  {repo.owner}/{repo.name}
+              {repositories.map((repo) => (
+                <SelectItem key={repo.Repoid} value={repo.Repoid}>
+                  {repo.Name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -209,9 +219,9 @@ export function RepositoryActions({
             <SelectValue placeholder="Select a repository" />
           </SelectTrigger>
           <SelectContent>
-            {sampleRepos.map((repo) => (
-              <SelectItem key={repo.id} value={repo.id}>
-                {repo.owner}/{repo.name}
+            {repositories.map((repo) => (
+              <SelectItem key={repo.Repoid} value={repo.Repoid}>
+                {repo.Name}
               </SelectItem>
             ))}
           </SelectContent>
