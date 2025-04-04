@@ -6,7 +6,8 @@ export interface ProjectType {
   roadmap: any[];
   goals: { text: string; description: string }[];
   license: any;
-  repositories: any[];
+  repository: any;
+  status: string;
 }
 
 export interface Roadmap {

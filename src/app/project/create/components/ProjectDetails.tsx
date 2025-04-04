@@ -9,6 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { ProjectType } from "../types";
 
 export function ProjectDetails({
@@ -40,6 +47,27 @@ export function ProjectDetails({
               }
               className="mt-1 text-lg font-medium"
             />
+          </div>
+          <div>
+            <label className="text-sm font-medium leading-none">
+              Project Status
+            </label>
+            <Select
+              value={project.status}
+              onValueChange={(value) =>
+                setProject({ ...project, status: value })
+              }
+            >
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Active">Active</SelectItem>
+                <SelectItem value="Maintenance">Maintenance</SelectItem>
+                <SelectItem value="In Development">In Development</SelectItem>
+                <SelectItem value="Planning">Planning</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-sm font-medium leading-none">

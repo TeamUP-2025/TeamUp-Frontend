@@ -33,10 +33,11 @@ export default function CreateProjectPage() {
     roadmap: [],
     goals: [],
     license: {},
-    repositories: [],
+    repository: null,
+    status: "Active",
   });
 
-  const [repositories, setRepositories] = useState<any[]>([]);
+  const [repository, setRepository] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   // Roadmap state
@@ -60,9 +61,9 @@ export default function CreateProjectPage() {
   useEffect(() => {
     setProject((prev) => ({
       ...prev,
-      repositories,
+      repository,
     }));
-  }, [repositories]);
+  }, [repository]);
 
   // Async function for handling form submission
   async function handleCreateProject() {
@@ -77,6 +78,7 @@ export default function CreateProjectPage() {
       // Use the server action to create the project
       const result = await createProject({
         ...project,
+        repositories: project.repository ? [project.repository] : [],
         description: project.longDescription.substring(0, 150), // Create a short description from the long one
       });
 
@@ -129,11 +131,11 @@ export default function CreateProjectPage() {
               <ProjectDetails project={project} setProject={setProject} />
             </div>
 
-            {/* Repositories form */}
+            {/* Repository form */}
             <div className="md:col-span-1">
               <ProjectRepositories
-                repositories={repositories}
-                setRepositories={setRepositories}
+                repository={repository}
+                setRepository={setRepository}
               />
             </div>
           </div>

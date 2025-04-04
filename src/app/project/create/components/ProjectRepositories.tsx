@@ -32,13 +32,13 @@ const sampleRepos = [
   { id: "repo3", name: "project-docs", owner: "teamup" },
 ];
 
-// Project Repositories Component
+// Project Repository Component
 export function ProjectRepositories({
-  repositories,
-  setRepositories,
+  repository,
+  setRepository,
 }: {
-  repositories: any[];
-  setRepositories: Dispatch<SetStateAction<any[]>>;
+  repository: any;
+  setRepository: Dispatch<SetStateAction<any>>;
 }) {
   return (
     <Card>
@@ -50,57 +50,52 @@ export function ProjectRepositories({
         <div className="space-y-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium">Connected Repositories</h3>
-              <RepositoryActions
-                repositories={repositories}
-                setRepositories={setRepositories}
-              />
+              <h3 className="text-sm font-medium">Connected Repository</h3>
+              {!repository && (
+                <RepositoryActions
+                  repository={repository}
+                  setRepository={setRepository}
+                />
+              )}
             </div>
 
-            {repositories.length > 0 ? (
+            {repository ? (
               <div className="space-y-2">
-                {repositories.map((repo) => (
-                  <div
-                    key={repo.id}
-                    className="flex items-center justify-between rounded-md border p-3"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <Github className="h-5 w-5 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">{repo.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {repo.owner}/{repo.name}
-                        </p>
-                      </div>
+                <div className="flex items-center justify-between rounded-md border p-3">
+                  <div className="flex items-center space-x-3">
+                    <Github className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">{repository.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {repository.owner}/{repository.name}
+                      </p>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                      onClick={() => {
-                        setRepositories(
-                          repositories.filter((r) => r.id !== repo.id),
-                        );
-                      }}
-                    >
-                      <Trash className="h-4 w-4" />
-                      <span className="sr-only">Remove repository</span>
-                    </Button>
                   </div>
-                ))}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    onClick={() => {
+                      setRepository(null);
+                    }}
+                  >
+                    <Trash className="h-4 w-4" />
+                    <span className="sr-only">Remove repository</span>
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8">
                 <Github className="h-10 w-10 text-muted-foreground" />
                 <h3 className="mt-2 text-sm font-medium">
-                  No repositories connected
+                  No repository connected
                 </h3>
                 <p className="mt-1 text-center text-xs text-muted-foreground">
                   Connect a GitHub repository to this project
                 </p>
                 <RepositoryActions
-                  repositories={repositories}
-                  setRepositories={setRepositories}
+                  repository={repository}
+                  setRepository={setRepository}
                   empty={true}
                 />
               </div>
@@ -114,12 +109,12 @@ export function ProjectRepositories({
 
 // Repository Actions Component
 export function RepositoryActions({
-  repositories,
-  setRepositories,
+  repository,
+  setRepository,
   empty = false,
 }: {
-  repositories: any[];
-  setRepositories: Dispatch<SetStateAction<any[]>>;
+  repository: any;
+  setRepository: Dispatch<SetStateAction<any>>;
   empty?: boolean;
 }) {
   const [selectedRepo, setSelectedRepo] = useState("");
@@ -134,7 +129,7 @@ export function RepositoryActions({
       const repo = sampleRepos.find((r) => r.id === selectedRepo);
 
       if (repo) {
-        setRepositories([...repositories, repo]);
+        setRepository(repo);
       }
 
       setLoading(false);
