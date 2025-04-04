@@ -1,39 +1,65 @@
-// app/project/[id]/page.tsx (Server Component)
-import { getProjectRepositories, getProjectTeamMembers, getProjectJoinRequests } from "~/lib/stub"
-import ProjectDashboardClient from "./project-dashboard-client"
-import ProjectDetails from "./project-details"
-import ProjectRepositories from "./project-repository"
-import {getProjectByID} from "~/action/project";
+import { getProjectRepositories } from "~/action/repo";
+import ProjectDashboardClient from "./project-dashboard-client";
+import ProjectRepositories from "./repository_component/project-repository";
+import ProjectDetails from "./project_detail_component/project-details";
+import {
+  getProjectApplicationByProjectID,
+  getProjectByID,
+  getProjectTeamByProjectID,
+} from "~/action/project";
 import { env } from "~/env";
 
-export default async function ProjectPage({ params }: { params: { id: string } }) {
-    // Fetch data on the server
-    
-    const project = await getProjectByID(params.id)
-    const Socket_url = env.SOCKET_URL;
-    // const repositories = await getProjectRepositories(params.id)
-    // const teamMembers = await getProjectTeamMembers(params.id)
-    // const joinRequests = await getProjectJoinRequests(params.id)
+export default async function ProjectPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { id } = await params;
+  // Fetch data on the server
+  const Socket_url = env.SOCKET_URL;
+  // const project = await getProjectByID(id);
+  // const repositories = await getProjectRepositories(id);
+  // const teamMembers = await getProjectTeamByProjectID(id);
+  // const applications = await getProjectApplicationByProjectID(id);
 
-    return (
-        <div className="flex min-h-screen flex-col">
-            <main className="flex-1 p-6 pt-4">
-                <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
-                    {/* Server-rendered project details */}
-                    <ProjectDetails project={project} Socket_url={Socket_url} />
+  const [project, repositories, teamMembers, applications] = await Promise.all([
+    getProjectByID(id),
+    getProjectRepositories(id),
+    getProjectTeamByProjectID(id),
+    getProjectApplicationByProjectID(id),
+  ]);
 
-                    {/* Server-rendered repositories section */}
-                    {/* <ProjectRepositories repositories={repositories} /> */}
-                </div>
+  const joinRequests =
+    applications && applications.length > 0
+      ? applications.map((application: any) => ({
+          uid: application.Uid,
+          Name: application.Name,
+          Location: application.Location,
+          Avatar: application.Avatar,
+          Coverletter: application.Coverletter,
+        }))
+      : [];
 
-                {/* Client component with interactive elements */}
-                {/* <ProjectDashboardClient
-                    initialProject={project}
-                    initialRepositories={repositories}
-                    initialTeamMembers={teamMembers}
-                    initialJoinRequests={joinRequests}
-                /> */}
-            </main>
+  console.log(joinRequests);
+  return (
+    <div className="flex min-h-screen flex-col">
+      <main className="flex-1 p-6 pt-4">
+        <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+          {/* Server-rendered project details */}
+          <ProjectDetails project={project} Socket_url={Socket_url} />
+
+          {/* Server-rendered repositories section */}
+          <ProjectRepositories repositories={repositories} />
         </div>
-    )
+
+        {/* Client component with interactive elements */}
+        <ProjectDashboardClient
+          initialProject={project}
+          initialRepositories={repositories}
+          initialTeamMembers={teamMembers}
+          initialJoinRequests={joinRequests}
+        />
+      </main>
+    </div>
+  );
 }

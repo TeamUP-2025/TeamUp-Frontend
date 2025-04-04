@@ -13,7 +13,7 @@ import EditProject from "./edit-project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { ListCollapse, MessageSquareText, HandCoins } from "lucide-react";
 // import Chat from "~/components/chat/chat_component"; // Assuming ChatPage is used
-import ChatPage from "~/app/chat_test/[id]/page";
+import ChatPage from "~/components/chat/chat_entry";
 import { project as p } from "~/schema/project_schema";
 import z from "zod";
 

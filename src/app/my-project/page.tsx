@@ -23,15 +23,6 @@ interface UserProject {
   License: string;
 }
 
-// License type
-interface License {
-  name: string;
-  description: string;
-  permission: string[];
-  condition: string[];
-  limitation: string[];
-}
-
 export default async function ProjectListPage() {
   // Fetch user's projects
   const userProjects = (await getUserProjects()) as UserProject[];
