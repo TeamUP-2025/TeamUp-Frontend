@@ -19,7 +19,7 @@ export default function ProjectGoals({ goals }) {
                                 <div className="flex items-start gap-3 flex-1">
                                     <CheckCircle2 className="h-5 w-5 mt-0.5 text-muted-foreground" />
                                     <div className="flex-1">
-                                        <p className="text-sm">{goal}</p>
+                                        <p className="text-sm">{goal.goalName}</p>
                                     </div>
                                 </div>
                             </div>

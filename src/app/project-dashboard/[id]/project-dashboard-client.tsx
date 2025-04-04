@@ -20,16 +20,16 @@ export default function ProjectDashboardClient({
     const [joinRequests, setJoinRequests] = useState(initialJoinRequests)
 
     const calculateProgress = useCallback(() => {
-        const total = project.roadmap.length
-        const completed = project.roadmap.filter((item) => item.status === "Completed").length
-        const inProgress = project.roadmap.filter((item) => item.status === "In Progress").length
+        const total = project.Roadmap.length
+        const completed = project.Roadmap.filter((item) => item.roadmapStatus === "Completed").length
+        const inProgress = project.Roadmap.filter((item) => item.roadmapStatus === "In Progress").length
         return Math.round(((completed + inProgress * 0.5) / total) * 100)
-    }, [project.roadmap])
+    }, [project.Roadmap])
 
     // Milestone status update handler
     const handleMilestoneStatusUpdate = async (index, newStatus) => {
         try {
-            const updatedRoadmap = [...project.roadmap]
+            const updatedRoadmap = [...project.Roadmap]
             updatedRoadmap[index] = {
                 ...updatedRoadmap[index],
                 status: newStatus,
@@ -130,13 +130,13 @@ export default function ProjectDashboardClient({
 
                 <TabsContent value="roadmap" className="mt-4">
                     <ProjectRoadmap
-                        roadmap={project.roadmap}
+                        roadmap={project.Roadmap}
                         progress={calculateProgress()}
                     />
                 </TabsContent>
 
                 <TabsContent value="goals" className="mt-4">
-                    <ProjectGoals goals={project.goals} />
+                    <ProjectGoals goals={project.Goal} />
                 </TabsContent>
 
                 <TabsContent value="team" className="mt-4">

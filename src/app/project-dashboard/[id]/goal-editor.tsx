@@ -88,7 +88,7 @@ export default function GoalsEditor({ initialGoals, projectId }) {
                 {editingGoal === index ? (
                     <div className="flex gap-2 w-full">
                       <Input
-                          value={goal}
+                          value={goal.goalName}
                           onChange={(e) => {
                             const updatedGoals = [...goals]
                             updatedGoals[index] = e.target.value
@@ -109,7 +109,7 @@ export default function GoalsEditor({ initialGoals, projectId }) {
                 ) : (
                     <>
                       <div className="flex-1">
-                        <p className="text-sm">{goal}</p>
+                        <p className="text-sm">{goal.goalName}</p>
                       </div>
                       <div className="flex gap-1">
                         <Button
