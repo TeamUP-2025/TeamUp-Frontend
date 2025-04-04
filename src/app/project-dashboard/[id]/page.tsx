@@ -3,9 +3,10 @@ import ProjectDashboardClient from "./project-dashboard-client";
 import ProjectRepositories from "./repository_component/project-repository";
 import ProjectDetails from "./project_detail_component/project-details";
 import {
-  getProjectApplicationByProjectID,
-  getProjectByID,
-  getProjectTeamByProjectID,
+    getDonationByProjectID,
+    getProjectApplicationByProjectID,
+    getProjectByID,
+    getProjectTeamByProjectID,
 } from "~/action/project";
 import { env } from "~/env";
 
@@ -29,6 +30,8 @@ export default async function ProjectPage({
     getProjectApplicationByProjectID(id),
   ]);
 
+  const donations = await getDonationByProjectID(id)
+
   const joinRequests =
     applications && applications.length > 0
       ? applications.map((application: any) => ({
@@ -46,7 +49,7 @@ export default async function ProjectPage({
       <main className="flex-1 p-6 pt-4">
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
           {/* Server-rendered project details */}
-          <ProjectDetails project={project} Socket_url={Socket_url} />
+          <ProjectDetails project={project} Socket_url={Socket_url} donation={donations} />
 
           {/* Server-rendered repositories section */}
           <ProjectRepositories repositories={repositories} />

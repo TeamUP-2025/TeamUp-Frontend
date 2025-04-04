@@ -305,25 +305,11 @@ export async function getProjectTeamByProjectID(projectID: string) {
   const data = await projectfromID.json();
   return data;
 }
-export async function createDonation(projectID: string, uid: string, amount: string) {
-  const response = await fetch(`${backendUrl}/project/create/donation`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      projectId: projectID,
-      userId: uid,
-      amount: amount
-    }),
-  });
 
-  if (!response.ok) {
-    // Handle errors from the update request
-    const errorText = await response.text();
-    console.error(
-        `Failed to donate project ${projectID}: ${response.status} ${errorText}`,
-    );
-    throw new Error(`Failed to donate project (status: ${response.status})`);
-  }
+export async function getDonationByProjectID(projectID: string) {
+  "use server";
+
+  const projectfromID = await fetch(`${backendUrl}/project/${projectID}/donation`);
+  const data = await projectfromID.json();
+  return data;
 }

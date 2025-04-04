@@ -34,3 +34,10 @@ export const searchProjectArray = z.array(z.object({
   License: z.coerce.string(),
   Tags: z.array(z.coerce.string()).default([]),
 }))
+
+export const donation = z.array(z.object({
+  CreateAt: z.coerce.date(),
+  Amount: z.coerce.string(),
+  Name: z.coerce.string(),
+  Avartar: z.coerce.string(),
+}))
