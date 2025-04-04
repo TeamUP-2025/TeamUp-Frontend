@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { useToast } from "~/hooks/use-toast";
 
 interface RoadmapStatusControlProps {
   milestoneIndex: number;
@@ -22,21 +23,25 @@ export default function RoadmapStatusControl({
 }: RoadmapStatusControlProps) {
   const [status, setStatus] = useState(currentStatus);
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleStatusChange = async (newStatus: string) => {
+    if (!onUpdateStatus || newStatus === status) return;
+
     try {
       setLoading(true);
       setStatus(newStatus); // Optimistically update UI
 
-      // Use the passed in handler function instead of direct API call
-      if (onUpdateStatus) {
-        await onUpdateStatus(milestoneIndex, newStatus);
-      }
-
-      setLoading(false);
+      await onUpdateStatus(milestoneIndex, newStatus);
     } catch (error) {
       console.error("Failed to update milestone status:", error);
       setStatus(currentStatus); // Revert to original status on error
+      toast({
+        title: "Error",
+        description: "Failed to update milestone status",
+        variant: "destructive",
+      });
+    } finally {
       setLoading(false);
     }
   };

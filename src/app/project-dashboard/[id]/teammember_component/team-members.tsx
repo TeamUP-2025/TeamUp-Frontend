@@ -27,8 +27,6 @@ interface TeamMembersProps {
 
 export default function TeamMembers({
   members = [],
-  onPromote,
-  onRemove,
   projectId,
 }: TeamMembersProps) {
   return (
