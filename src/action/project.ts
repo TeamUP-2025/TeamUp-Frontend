@@ -207,13 +207,16 @@ export async function updateProjectDetail(
 ): Promise<z.infer<typeof project>> {
   // Return the Zod type
   // "use server"; // Not needed inside the function
-
+  const cookieStore = await cookies();
+  const token = await cookieStore.get("token");
+  
   const response = await fetch(
     `${backendUrl}/project/update`, // Correct endpoint
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        
       },
       body: JSON.stringify({
         // Ensure keys match the backend Go struct tags (`json:"..."`)
@@ -316,11 +319,14 @@ export async function getDonationByProjectID(projectID: string) {
 
 export async function createDonation(projectID: string, userId: string, amount: string) {
   "use server";
+  const cookieStore = await cookies();
+  const token = await cookieStore.get("token");
 
-  const projectfromID = await fetch(`${backendUrl}/project/create/donation
-
-`, {
+  const projectfromID = await fetch(`${backendUrl}/project/create/donation`, {
     method: "POST",
+    headers: {
+      Cookie: `token=${token?.value};`,
+    },
     body: JSON.stringify({
       projectId: projectID,
       userId: userId,
