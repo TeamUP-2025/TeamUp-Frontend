@@ -132,11 +132,16 @@ export default async function ProjectListPage() {
                             {project.Status} • Role: {project.Role}
                           </CardDescription>
                         </div>
-                        <Button variant="outline" size="sm" asChild>
-                          <Link href={`/project/${project.ID}`}>
-                            View Details
-                          </Link>
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href={`/project-dashboard/${project.ID}`}>
+                              Manage
+                            </Link>
+                          </Button>
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href={`/project/${project.ID}`}>View</Link>
+                          </Button>
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
