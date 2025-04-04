@@ -1,9 +1,12 @@
 "use server"
 
 import { githubUser } from "~/schema/githut_schema";
+import { env } from "~/env";
+
+const backendUrl = env.BACKEND_URL;
 
 export async function getUserProfileByLogin(login : string) {
-    const user = await fetch(`http://localhost:8080/profile/${login}`);
+    const user = await fetch(`${backendUrl}/profile/${login}`);
     const originalData = await user.json();
     const formatData = {
       login: originalData.Login,

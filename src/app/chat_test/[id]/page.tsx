@@ -12,7 +12,7 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
     redirect("/");
   }
   
-  console.log(id);
+
   const SOCKET_URL = env.SOCKET_URL;
 
 

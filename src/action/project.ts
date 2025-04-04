@@ -1,6 +1,11 @@
 "use server";
 import { project, searchProjectArray } from "~/schema/project_schema";
-import {z} from "zod"
+import { z } from "zod";
+import { env } from "~/env";
+import { cookies } from "next/headers";
+
+// Use the BACKEND_URL directly without modification
+const backendUrl = env.BACKEND_URL;
 
 type SearchParams = {
   title?: string;
@@ -8,6 +13,60 @@ type SearchParams = {
   licenseName?: string;
   tagNames?: string[];
 };
+
+interface CreateProjectParams {
+  title: string;
+  description: string;
+  longDescription: string;
+  tags: string[];
+  roadmap: any[];
+  goals: { text: string; description: string }[];
+  license: any;
+  repositories: any[];
+}
+
+export async function createProject(params: CreateProjectParams) {
+  const cookieStore = await cookies();
+  const cookie = await cookieStore.get("token");
+  try {
+    const project = await fetch(`${backendUrl}/project/create`, {
+      method: "POST",
+      body: JSON.stringify(params),
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${cookie?.value};`,
+      },
+    });
+
+    if (!project.ok) {
+      console.error(`Server responded with status: ${project.status}`);
+      return {
+        success: false,
+        projectId: "",
+        error: `Server error: ${project.status}`,
+      };
+    }
+
+    const responseText = await project.text();
+
+    // Check if response is empty
+    if (!responseText) {
+      return {
+        success: false,
+        projectId: "",
+        error: "Empty response from server",
+      };
+    }
+
+
+    const result = { success: true, projectId: responseText };
+    console.log(result);
+    return result;
+  } catch (fetchError) {
+    console.error("Fetch error:", fetchError);
+    return { success: false, projectId: "", error: String(fetchError) };
+  }
+}
 
 export async function getProject(params?: SearchParams) {
   // Build query string from search parameters
@@ -29,10 +88,10 @@ export async function getProject(params?: SearchParams) {
     }
   }
 
-  const project = await fetch(`http://localhost:8080/project/${queryString}`);
+  const project = await fetch(`${backendUrl}/project/${queryString}`);
   const data = await project.json();
   const parseData = searchProjectArray.safeParse(data);
-  console.log(data);
+  
   if (!parseData.success) {
     console.log("Failed to parse project data:", parseData.error.message);
     // Return an empty array if parsing fails
@@ -61,20 +120,17 @@ export async function requestJoinProject(
   uID: string,
   coverLetter: string,
 ) {
-  const projectfromID = await fetch(
-    `http://localhost:8080/project/${projectID}/join`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        projectId: projectID,
-        coverLetter: coverLetter,
-        uID: uID,
-      }),
+  const projectfromID = await fetch(`${backendUrl}/project/${projectID}/join`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({
+      projectId: projectID,
+      coverLetter: coverLetter,
+      uID: uID,
+    }),
+  });
 
   const data = await projectfromID.json();
   console.log(projectID, coverLetter, data);
@@ -84,9 +140,7 @@ export async function requestJoinProject(
 export async function getProjectByID(projectID: string) {
   "use server";
 
-  const projectfromID = await fetch(
-    `http://localhost:8080/project/${projectID}`,
-  );
+  const projectfromID = await fetch(`${backendUrl}/project/${projectID}`);
   const data = await projectfromID.json();
 
   // console.log(data);
@@ -151,11 +205,12 @@ export async function updateProjectDetail(
   title: string,
   description: string,
   tags: string[], // Changed 'tag' to 'tags' for clarity, matches body key
-): Promise<z.infer<typeof project>> { // Return the Zod type
+): Promise<z.infer<typeof project>> {
+  // Return the Zod type
   // "use server"; // Not needed inside the function
 
   const response = await fetch(
-    `http://localhost:8080/project/update`, // Correct endpoint
+    `${backendUrl}/project/update`, // Correct endpoint
     {
       method: "POST",
       headers: {
@@ -174,7 +229,9 @@ export async function updateProjectDetail(
   if (!response.ok) {
     // Handle errors from the update request
     const errorText = await response.text();
-    console.error(`Failed to update project ${projectId}: ${response.status} ${errorText}`);
+    console.error(
+      `Failed to update project ${projectId}: ${response.status} ${errorText}`,
+    );
     throw new Error(`Failed to update project (status: ${response.status})`);
   }
 
@@ -184,7 +241,10 @@ export async function updateProjectDetail(
     const updatedProjectData = await getProjectByID(projectId);
     return updatedProjectData; // Return the newly fetched, parsed, and validated data
   } catch (fetchError) {
-    console.error(`Failed to re-fetch project ${projectId} after update:`, fetchError);
+    console.error(
+      `Failed to re-fetch project ${projectId} after update:`,
+      fetchError,
+    );
     // Decide how to handle this: maybe throw a different error,
     // or return the old data (less ideal)
     throw new Error(`Project updated, but failed to fetch updated details.`);
