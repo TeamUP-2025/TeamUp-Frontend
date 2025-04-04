@@ -287,3 +287,20 @@ export async function getUserProjects() {
     return [];
   }
 }
+
+
+export async function getProjectApplicationByProjectID(projectID: string) {
+  "use server";
+
+  const projectfromID = await fetch(`${backendUrl}/project/${projectID}/application`);
+  const data = await projectfromID.json();
+  return data;
+}
+
+export async function getProjectTeamByProjectID(projectID: string) {
+  "use server";
+
+  const projectfromID = await fetch(`${backendUrl}/project/${projectID}/team`);
+  const data = await projectfromID.json();
+  return data;
+}

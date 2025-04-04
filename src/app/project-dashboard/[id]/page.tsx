@@ -1,10 +1,12 @@
-// app/project/[id]/page.tsx (Server Component)
-import { getProjectTeamMembers, getProjectJoinRequests } from "~/lib/stub";
 import { getProjectRepositories } from "~/action/repo";
 import ProjectDashboardClient from "./project-dashboard-client";
-import ProjectDetails from "./project-details";
-import ProjectRepositories from "./project-repository";
-import { getProjectByID } from "~/action/project";
+import ProjectRepositories from "./repository_component/project-repository";
+import ProjectDetails from "./project_detail_component/project-details";
+import {
+  getProjectApplicationByProjectID,
+  getProjectByID,
+  getProjectTeamByProjectID,
+} from "~/action/project";
 import { env } from "~/env";
 
 export default async function ProjectPage({
@@ -12,14 +14,32 @@ export default async function ProjectPage({
 }: {
   params: { id: string };
 }) {
-    const { id } = await params;
+  const { id } = params;
   // Fetch data on the server
   const Socket_url = env.SOCKET_URL;
-  const project = await getProjectByID(id);
-  const repositories = await getProjectRepositories(id);
-  
-//   const teamMembers = await getProjectTeamMembers(params.id);
-//   const joinRequests = await getProjectJoinRequests(params.id);
+  // const project = await getProjectByID(id);
+  // const repositories = await getProjectRepositories(id);
+  // const teamMembers = await getProjectTeamByProjectID(id);
+  // const applications = await getProjectApplicationByProjectID(id);
+
+  const [project, repositories, teamMembers, applications] = await Promise.all([
+    getProjectByID(id),
+    getProjectRepositories(id),
+    getProjectTeamByProjectID(id),
+    getProjectApplicationByProjectID(id),
+  ]);
+
+  console.log(applications);
+  console.log(teamMembers);
+
+  const joinRequests =
+    applications && applications.length > 0
+      ? applications.map((application: any) => ({
+          id: application.id,
+          user: application.user,
+          status: application.status,
+        }))
+      : [];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -33,12 +53,12 @@ export default async function ProjectPage({
         </div>
 
         {/* Client component with interactive elements */}
-        {/* <ProjectDashboardClient
-                    initialProject={project}
-                    initialRepositories={repositories}
-                    initialTeamMembers={teamMembers}
-                    initialJoinRequests={joinRequests}
-                /> */}
+        <ProjectDashboardClient
+          initialProject={project}
+          initialRepositories={repositories}
+          initialTeamMembers={teamMembers}
+          initialJoinRequests={joinRequests}
+        />
       </main>
     </div>
   );
