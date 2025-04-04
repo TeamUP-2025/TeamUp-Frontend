@@ -1,13 +1,19 @@
 import type { Metadata } from "next"
 import DonationForm from "~/components/donation/donation-form"
 import {getProjectByID} from "~/action/project";
-
+import { getServerAuthSession } from "~/lib/auth";
 export const metadata: Metadata = {
     title: "Donate",
     description: "Support our cause with a donation",
 }
 
 export default async function DonatePage({params}: { params: { id: string } }) {
+    const auth = await getServerAuthSession();
+    if (!auth.isLoggedIn) {
+        // Inform the user they need to log in
+        return <p>Please log in to donate to this project.</p>;
+    }
+
     const project = await getProjectByID(params.id)
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">

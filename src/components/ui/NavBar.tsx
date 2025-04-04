@@ -1,12 +1,14 @@
-"use client";
-import { useAuth } from "~/context/AuthContext";
+"use server";
 import Link from "next/link";
 import { Github } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import { logoutAction } from "~/action/logout";
+import { getServerAuthSession } from "~/lib/auth";
+import { env } from "~/env";
 
-export default function NavBar() {
-  const auth = useAuth();
+export default async function NavBar() {
+  const auth = await getServerAuthSession();
+  const url = env.BACKEND_URL;
   return (
     <header className="flex h-14 items-center border-b px-4 lg:px-6">
       <Link className="flex items-center justify-center" href="/">
@@ -22,7 +24,7 @@ export default function NavBar() {
         </Link>
         <Link
           className="text-sm font-medium underline-offset-4 hover:underline"
-          href="/index"
+          href="/browse"
         >
           Browse
         </Link>
@@ -54,7 +56,7 @@ export default function NavBar() {
           <>
             <Link
               className="text-sm font-medium underline-offset-4 hover:underline"
-              href="http://localhost:8080/auth/github"
+              href={`${url}/auth/github`}
             >
               Login
             </Link>

@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider, useAuth } from "~/context/AuthContext";
 import NavBar from "~/components/ui/NavBar";
 import { getServerAuthSession } from "~/lib/auth";
+import { env } from "~/env";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -25,7 +26,7 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <AuthProvider initialAuthState={authData}>
-          <NavBar />
+          <NavBar backendUrl={env.BACKEND_URL} />
           {children}
           <ToastContainer position="top-center" autoClose={3000} />
         </AuthProvider>

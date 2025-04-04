@@ -16,8 +16,14 @@ import { ProjectLICENSE } from "./components/License";
 
 // Import types
 import { ProjectType, Roadmap, Goal, License } from "./types";
+import { useAuth } from "~/context/AuthContext";
 
 export default function CreateProjectPage() {
+  const auth = useAuth();
+  if (!auth.isLoggedIn) {
+    // Inform the user they need to log in
+    return <p>Please log in to create a project.</p>;
+  }
   const router = useRouter();
 
   // Initialize empty project form state

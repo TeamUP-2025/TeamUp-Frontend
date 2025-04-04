@@ -12,7 +12,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "~/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
 import { useToast } from "~/hooks/use-toast"
-import {createDonation} from "~/action/project";
+import { createDonation } from "~/action/project";
 import {useAuth} from "~/context/AuthContext";
 
 
@@ -56,12 +56,13 @@ export default function DonationForm({ projectId }: { projectId: string }) {
 
         setIsSubmitting(false)
 
+        
+
+        form.reset()
         toast({
             title: "Donation successful",
             description: `Thank you for your donation of $${values.amount}`,
         })
-
-        form.reset()
     }
 
     return (

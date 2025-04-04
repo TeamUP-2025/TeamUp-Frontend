@@ -66,11 +66,14 @@ export async function denyRequest(
   projectId: string,
   userId: string,
 ): Promise<boolean> {
+  const cookieStore = await cookies();
+    const token = await cookieStore.get("token");
   try {
     const response = await fetch(`${backendUrl}/project/application/deny`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: `token=${token?.value};`,
       },
       body: JSON.stringify({
         projectId,
