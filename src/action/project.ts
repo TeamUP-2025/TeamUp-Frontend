@@ -91,7 +91,7 @@ export async function getProject(params?: SearchParams) {
   const project = await fetch(`${backendUrl}/project/${queryString}`);
   const data = await project.json();
   const parseData = searchProjectArray.safeParse(data);
-  console.log(data);
+  
   if (!parseData.success) {
     console.log("Failed to parse project data:", parseData.error.message);
     // Return an empty array if parsing fails

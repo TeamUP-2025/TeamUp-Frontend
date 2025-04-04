@@ -16,13 +16,11 @@ export async function getRecentRepoByLogin(login: string) {
 export async function getRepoByUid() {
     const cookieStore = await cookies();
     const cookie = await cookieStore.get("token");
-    console.log(`${backendUrl}/repos/uid/`)
     const repo = await fetch(`${backendUrl}/repos/uid`, {
         headers: {
             "Cookie": `token=${cookie?.value};`,
         },
     });
-    console.log(repo);
     const data = await repo.json();
     const parseData = githubRepoArray.parse(data);
     return parseData;

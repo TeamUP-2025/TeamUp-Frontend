@@ -14,7 +14,7 @@ export async function getUserProfileAuth() {
     },
   });
   const data = await user.json();
-  console.log(data);
+
   const parseData = githubUser.parse(data);
   return parseData;
 }
@@ -28,7 +28,7 @@ export async function getRecentRepoAuth() {
     },
   });
   const data = await repo.json();
-  console.log(data);
+
   const parseData = githubRepoArray.parse(data);
   return parseData;
 }
