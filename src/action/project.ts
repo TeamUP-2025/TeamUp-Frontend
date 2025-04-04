@@ -292,9 +292,10 @@ export async function getUserProjects() {
 export async function getProjectApplicationByProjectID(projectID: string) {
   "use server";
 
-  const projectfromID = await fetch(`${backendUrl}/project/${projectID}/application`);
-  const data = await projectfromID.json();
+  const projectAppfromID = await fetch(`${backendUrl}/project/${projectID}/application`);
+  const data = await projectAppfromID.json();
   return data;
+
 }
 
 export async function getProjectTeamByProjectID(projectID: string) {

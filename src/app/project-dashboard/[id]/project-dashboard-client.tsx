@@ -6,7 +6,7 @@ import { Clock, CheckCircle2, Users, UserPlus } from "lucide-react";
 import ProjectRoadmap from "./project-roadmap";
 import ProjectGoals from "./project-goal";
 import TeamMembers from "./teammember_component/team-members";
-import JoinRequests from "./join-request";
+import JoinRequests from "./request_component/join-request";
 
 // Direct implementation functions instead of importing from lib/actions
 async function updateMilestoneStatus(

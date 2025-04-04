@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { approveRequest, denyRequest } from "~/action/member";
 
 interface RequestActionsProps {
   requestId: string;
@@ -21,19 +22,10 @@ export default function RequestActions({
     try {
       setLoading(true);
 
-      const response = await fetch(`/api/project/application/approve`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          projectId,
-          userId: requestId,
-        }),
-      });
+      const response = await approveRequest(projectId, requestId);
 
-      if (!response.ok) {
-        throw new Error(`Failed to approve request: ${response.status}`);
+      if (!response) {
+        throw new Error(`Failed to approve request`);
       }
 
       setLoading(false);
@@ -51,19 +43,10 @@ export default function RequestActions({
     try {
       setLoading(true);
 
-      const response = await fetch(`/api/project/application/deny`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          projectId,
-          userId: requestId,
-        }),
-      });
+      const response = await denyRequest(projectId, requestId);
 
-      if (!response.ok) {
-        throw new Error(`Failed to deny request: ${response.status}`);
+      if (!response) {
+        throw new Error(`Failed to deny request`);
       }
 
       setLoading(false);

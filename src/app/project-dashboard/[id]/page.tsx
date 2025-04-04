@@ -14,7 +14,7 @@ export default async function ProjectPage({
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
+  const { id } = await params;
   // Fetch data on the server
   const Socket_url = env.SOCKET_URL;
   // const project = await getProjectByID(id);
@@ -29,18 +29,18 @@ export default async function ProjectPage({
     getProjectApplicationByProjectID(id),
   ]);
 
-  console.log(applications);
-  console.log(teamMembers);
-
   const joinRequests =
     applications && applications.length > 0
       ? applications.map((application: any) => ({
-          id: application.id,
-          user: application.user,
-          status: application.status,
+          uid: application.Uid,
+          Name: application.Name,
+          Location: application.Location,
+          Avatar: application.Avatar,
+          Coverletter: application.Coverletter,
         }))
       : [];
 
+  console.log(joinRequests);
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1 p-6 pt-4">
