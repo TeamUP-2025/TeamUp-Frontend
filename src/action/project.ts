@@ -305,3 +305,11 @@ export async function getProjectTeamByProjectID(projectID: string) {
   const data = await projectfromID.json();
   return data;
 }
+
+export async function getDonationByProjectID(projectID: string) {
+  "use server";
+
+  const projectfromID = await fetch(`${backendUrl}/project/${projectID}/donation`);
+  const data = await projectfromID.json();
+  return data;
+}
