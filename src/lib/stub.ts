@@ -1,35 +1,5 @@
 // Mock data - in a real app, this would be fetched from your database
-const projectData = {
-    id: 1,
-    title: "AI-powered Image Recognition",
-    description:
-        "Develop a machine learning model for accurate image recognition and classification...",
-    longDescription:
-        "Our project focuses on pushing the boundaries of image recognition technology...",
-    tags: ["Python", "TensorFlow", "Computer Vision", "Deep Learning", "CNN"],
-    roadmap: [
-        {
-            milestone: "Research and Planning",
-            description: "Gather requirements, research state-of-the-art techniques...",
-            status: "Completed",
-        },
-        // other milestones...
-    ],
-    goals: [
-        "Achieve 95% accuracy in object recognition across diverse image types",
-        // other goals...
-    ],
-    license: {
-        name: "MIT License",
-        // license details...
-    },
-    owner: {
-        id: "user-1",
-        name: "Alex Morgan",
-        email: "alex@teamup.com",
-        avatar: "/placeholder.svg?height=40&width=40",
-    },
-}
+
 
 // Sample repositories
 const sampleRepos = [
@@ -72,6 +42,37 @@ const sampleJoinRequests = [
 
 // Simulated data fetching functions
 export async function getProjectById(id: string) {
+    const projectData = {
+        id: id,
+        title: "AI-powered Image Recognition",
+        description:
+            "Develop a machine learning model for accurate image recognition and classification...",
+        longDescription:
+            "Our project focuses on pushing the boundaries of image recognition technology...",
+        tags: ["Python", "TensorFlow", "Computer Vision", "Deep Learning", "CNN"],
+        roadmap: [
+            {
+                milestone: "Research and Planning",
+                description: "Gather requirements, research state-of-the-art techniques...",
+                status: "Completed",
+            },
+            // other milestones...
+        ],
+        goals: [
+            "Achieve 95% accuracy in object recognition across diverse image types",
+            // other goals...
+        ],
+        license: {
+            name: "MIT License",
+            // license details...
+        },
+        owner: {
+            id: "user-1",
+            name: "Alex Morgan",
+            email: "alex@teamup.com",
+            avatar: "/placeholder.svg?height=40&width=40",
+        },
+    }
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 100))
     return projectData

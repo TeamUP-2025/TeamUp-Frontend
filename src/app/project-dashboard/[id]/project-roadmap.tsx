@@ -23,9 +23,9 @@ export default function ProjectRoadmap({ roadmap, progress }) {
                             <div className="flex gap-4">
                                 {/* Status indicator */}
                                 <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-background">
-                                    {milestone.status === "Completed" ? (
+                                    {milestone.roadmapStatus === "Completed" ? (
                                         <CheckCircle2 className="h-5 w-5 text-primary" />
-                                    ) : milestone.status === "In Progress" ? (
+                                    ) : milestone.roadmapStatus === "In Progress" ? (
                                         <Clock className="h-5 w-5 text-amber-500" />
                                     ) : (
                                         <Circle className="h-5 w-5 text-muted-foreground" />
@@ -34,25 +34,25 @@ export default function ProjectRoadmap({ roadmap, progress }) {
 
                                 <div className="flex flex-col space-y-1.5">
                                     <div className="flex items-center gap-2">
-                                        <h3 className="font-medium leading-none">{milestone.milestone}</h3>
+                                        <h3 className="font-medium leading-none">{milestone.roadmap}</h3>
                                         <Badge
                                             variant={
-                                                milestone.status === "Completed"
+                                                milestone.roadmapStatus === "Completed"
                                                     ? "default"
-                                                    : milestone.status === "In Progress"
+                                                    : milestone.roadmapStatus === "In Progress"
                                                         ? "outline"
                                                         : "secondary"
                                             }
                                         >
-                                            {milestone.status}
+                                            {milestone.roadmapStatus}
                                         </Badge>
                                     </div>
-                                    <p className="text-sm text-muted-foreground">{milestone.description}</p>
+                                    <p className="text-sm text-muted-foreground">{milestone.roadmapDescription}</p>
 
                                     <div className="pt-2">
                                         <RoadmapStatusControl
                                             milestoneIndex={index}
-                                            currentStatus={milestone.status}
+                                            currentStatus={milestone.roadmapStatus}
                                         />
                                     </div>
                                 </div>
@@ -61,15 +61,6 @@ export default function ProjectRoadmap({ roadmap, progress }) {
                     ))}
                 </div>
             </CardContent>
-            <CardFooter>
-                <div className="w-full">
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Overall Progress</span>
-                        <span className="text-sm text-muted-foreground">{progress}%</span>
-                    </div>
-                    <Progress value={progress} className="mt-2" />
-                </div>
-            </CardFooter>
         </Card>
     )
 }

@@ -31,7 +31,7 @@ export default function RoadmapStatusControl({ milestoneIndex, currentStatus, pr
                 <SelectValue placeholder="Update status" />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="Not Started">Not Started</SelectItem>
+                <SelectItem value="Planned">Not Started</SelectItem>
                 <SelectItem value="In Progress">In Progress</SelectItem>
                 <SelectItem value="Completed">Completed</SelectItem>
             </SelectContent>
