@@ -138,8 +138,6 @@ export async function requestJoinProject(
 }
 
 export async function getProjectByID(projectID: string) {
-  "use server";
-
   const projectfromID = await fetch(`${backendUrl}/project/${projectID}`);
   const data = await projectfromID.json();
 
@@ -248,5 +246,28 @@ export async function updateProjectDetail(
     // Decide how to handle this: maybe throw a different error,
     // or return the old data (less ideal)
     throw new Error(`Project updated, but failed to fetch updated details.`);
+  }
+}
+
+export async function createDonation(projectID: string, uid: string, amount: string) {
+  const response = await fetch(`${backendUrl}/project/create/donation`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      projectId: projectID,
+      userId: uid,
+      amount: amount
+    }),
+  });
+
+  if (!response.ok) {
+    // Handle errors from the update request
+    const errorText = await response.text();
+    console.error(
+        `Failed to donate project ${projectID}: ${response.status} ${errorText}`,
+    );
+    throw new Error(`Failed to donate project (status: ${response.status})`);
   }
 }
