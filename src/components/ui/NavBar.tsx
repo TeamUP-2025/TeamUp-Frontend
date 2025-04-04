@@ -22,7 +22,7 @@ export default function NavBar() {
         </Link>
         <Link
           className="text-sm font-medium underline-offset-4 hover:underline"
-          href="/project/1"
+          href="/index"
         >
           Browse
         </Link>
@@ -31,7 +31,7 @@ export default function NavBar() {
           <>
             <Link
               className="text-sm font-medium underline-offset-4 hover:underline"
-              href="/project-dashboard"
+              href="/my-project"
             >
               My Projects
             </Link>

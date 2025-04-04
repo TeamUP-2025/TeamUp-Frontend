@@ -4,11 +4,13 @@ import ProjectDashboardClient from "./project-dashboard-client"
 import ProjectDetails from "./project-details"
 import ProjectRepositories from "./project-repository"
 import {getProjectByID} from "~/action/project";
+import { env } from "~/env";
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
     // Fetch data on the server
     
     const project = await getProjectByID(params.id)
+    const Socket_url = env.SOCKET_URL;
     // const repositories = await getProjectRepositories(params.id)
     // const teamMembers = await getProjectTeamMembers(params.id)
     // const joinRequests = await getProjectJoinRequests(params.id)
@@ -18,7 +20,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             <main className="flex-1 p-6 pt-4">
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
                     {/* Server-rendered project details */}
-                    <ProjectDetails project={project} />
+                    <ProjectDetails project={project} Socket_url={Socket_url} />
 
                     {/* Server-rendered repositories section */}
                     {/* <ProjectRepositories repositories={repositories} /> */}
