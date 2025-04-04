@@ -81,7 +81,7 @@ export function ProjectSearch({ allTags, initialValues }: ProjectSearchProps) {
     }
 
     // Navigate to new URL with updated parameters
-    router.push(`/index?${params.toString()}`);
+    router.push(`/browse?${params.toString()}`);
   }, [title, status, licenseName, selectedTags, 
     // router,
      searchParams]);

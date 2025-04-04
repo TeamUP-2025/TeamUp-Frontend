@@ -11,6 +11,7 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { getUserProjects } from "~/action/project";
+import { useAuth } from "~/context/AuthContext";
 
 // Define the UserProject type
 interface UserProject {
@@ -24,6 +25,11 @@ interface UserProject {
 }
 
 export default async function ProjectListPage() {
+  const auth = useAuth();
+  if (!auth.isLoggedIn) {
+    // Inform the user they need to log in
+    return <p>Please log in to view your projects.</p>;
+  }
   // Fetch user's projects
   const userProjects = (await getUserProjects()) as UserProject[];
 

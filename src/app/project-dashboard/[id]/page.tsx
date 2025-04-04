@@ -9,6 +9,7 @@ import {
     getProjectTeamByProjectID,
 } from "~/action/project";
 import { env } from "~/env";
+import { getServerAuthSession } from "~/lib/auth";
 
 export default async function ProjectPage({
   params,
@@ -17,11 +18,12 @@ export default async function ProjectPage({
 }) {
   const { id } = await params;
   // Fetch data on the server
+  const auth = await getServerAuthSession();
+  if (!auth.isLoggedIn) {
+    // Inform the user they need to log in
+    return <p>Please log in to view this project.</p>;
+  }
   const Socket_url = env.SOCKET_URL;
-  // const project = await getProjectByID(id);
-  // const repositories = await getProjectRepositories(id);
-  // const teamMembers = await getProjectTeamByProjectID(id);
-  // const applications = await getProjectApplicationByProjectID(id);
 
   const [project, repositories, teamMembers, applications] = await Promise.all([
     getProjectByID(id),

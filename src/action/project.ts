@@ -313,3 +313,25 @@ export async function getDonationByProjectID(projectID: string) {
   const data = await projectfromID.json();
   return data;
 }
+
+export async function createDonation(projectID: string, userId: string, amount: string) {
+  "use server";
+
+  const projectfromID = await fetch(`${backendUrl}/project/create/donation
+
+`, {
+    method: "POST",
+    body: JSON.stringify({
+      projectId: projectID,
+      userId: userId,
+      amount: amount,
+    }),
+  });
+
+  if (!projectfromID.ok) {
+    console.error(`Failed to create donation: ${projectfromID.status}`);
+    return { success: false, error: "Failed to create donation" };
+  }
+
+  return { success: true };
+}
