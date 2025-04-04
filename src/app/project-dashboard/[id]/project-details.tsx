@@ -20,7 +20,7 @@ import z from "zod";
 type Project = z.infer<typeof p>;
 
 // Rename the prop for clarity
-export default function ProjectDetails({ project: initialProject }: { project: Project }) {
+export default function ProjectDetails({ project: initialProject, Socket_url }: { project: Project, Socket_url: string }) {
   // Use state to manage the project data within this component
   const [currentProject, setCurrentProject] = useState<Project>(initialProject);
 
@@ -117,7 +117,7 @@ export default function ProjectDetails({ project: initialProject }: { project: P
       </TabsContent>
       <TabsContent value="chat">
         {/* Use currentProject state for ID */}
-        <ChatPage params={{ id: currentProject.ID }}></ChatPage>
+        <ChatPage params={{ id: currentProject.ID, Socket_url: Socket_url }}></ChatPage>
       </TabsContent>
     </Tabs>
   );

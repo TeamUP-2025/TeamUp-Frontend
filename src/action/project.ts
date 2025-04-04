@@ -58,7 +58,6 @@ export async function createProject(params: CreateProjectParams) {
       };
     }
 
-
     const result = { success: true, projectId: responseText };
     console.log(result);
     return result;
@@ -91,7 +90,7 @@ export async function getProject(params?: SearchParams) {
   const project = await fetch(`${backendUrl}/project/${queryString}`);
   const data = await project.json();
   const parseData = searchProjectArray.safeParse(data);
-  
+
   if (!parseData.success) {
     console.log("Failed to parse project data:", parseData.error.message);
     // Return an empty array if parsing fails
@@ -248,5 +247,43 @@ export async function updateProjectDetail(
     // Decide how to handle this: maybe throw a different error,
     // or return the old data (less ideal)
     throw new Error(`Project updated, but failed to fetch updated details.`);
+  }
+}
+
+export async function getUserProjects() {
+  "use server";
+
+  const cookieStore = await cookies();
+  const cookie = await cookieStore.get("token");
+
+  try {
+    const response = await fetch(`${backendUrl}/project/project/member`, {
+      headers: {
+        Cookie: `token=${cookie?.value};`,
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch user projects: ${response.status}`);
+      return [];
+    }
+
+    const data = await response.json();
+
+    // Transform the data to match the project schema format
+    const transformedData = data.map((project: any) => ({
+      ID: project.Projectid,
+      Title: project.Title,
+      Description: project.Description,
+      Status: project.Status || "Active",
+      Role: project.Role,
+      Tags: project.Tags || [],
+      License: project.License || "Unknown",
+    }));
+
+    return transformedData;
+  } catch (error) {
+    console.error("Error fetching user projects:", error);
+    return [];
   }
 }
