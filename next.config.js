@@ -12,16 +12,7 @@ const config = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    // Using export instead of standalone to fix CSS processing issues
-    output: 'export',
-    images: {
-        unoptimized: true,
-    },
-    // Disable some features that might cause CSS/rendering issues
-    experimental: {
-        optimizeCss: false,
-        esmExternals: false
-    }
+    output: 'standalone',
 };
 
 export default config;
