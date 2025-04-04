@@ -9,15 +9,12 @@ import { updateMilestoneStatus} from "~/lib/actions"
 import ProjectLICENSE from "./project-LICENSE"
 
 export default function ProjectDashboardClient({
-    project, 
-    setProject, 
-    repositories, 
-    setRepositories
+    project, setProject, 
+    roadmap, setRoadmap,
+    goal, setGoal
 }) {
 
     //project attributes
-    const [roadmap, setRoadmap] = useState(project.roadmap)
-    const [goal, setGoal] = useState(project.goal)
     const [license, setLicense] = useState(project.license)
 
 

@@ -18,15 +18,24 @@ export default function CreateProjectPage() {
     const [project, setProject] = useState({
         title: "",
         description: "",
-        longDescription: "",
-        tags: [],
+        repoid:[], //UUID
+        status:"", //VARCHAR
         roadmap: [],
         goals: [],
-        license: {},
+        license: {}, //UUID
 
     });
 
     const [repositories, setRepositories] = useState([]);
+    const [tags, setTags] = useState<String[]>([])
+    const [roadmap, setRoadmap] = useState()
+    const [goal, setGoal] = useState()
+
+    //repo -> project -> roadmap & goal 
+    //     ->current  -> team member
+    //tag             -> projectTag
+
+    // todo: get Current User
 
     // Async function for handling form submission (placeholder)
     async function handleCreateProject() {
@@ -59,7 +68,10 @@ export default function CreateProjectPage() {
             <main className="flex-1 p-6 pt-4">
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
                     {/* Project details form */}
-                    <ProjectDetails project={project} setProject={setProject} />
+                    <ProjectDetails 
+                    project={project} setProject={setProject} 
+                    tags={tags} setTags={setTags}
+                    />
                     
                     {/* Repositories form */}
                     <ProjectRepositories repositories={repositories} setRepositories={setRepositories}/>
@@ -68,7 +80,8 @@ export default function CreateProjectPage() {
                 {/* Client component with interactive elements */}
                 <ProjectDashboardClient
                     project={project} setProject={setProject}
-                    repositories={repositories} setRepositories={setRepositories}
+                    roadmap={roadmap} setRoadmap={setRoadmap}
+                    goal={goal} setGoal ={setGoal}
                 />
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3 mt-5 px-8">
                     <Button onClick={handleCreateProject}>Create</Button>

@@ -22,7 +22,7 @@ const sampleRepos = [
     { id: "repo3", name: "project-docs", owner: "teamup" },
 ]
 
-export default function RepositoryActions({ repoId, projectId, empty = false }) {
+export default function RepositoryActions({ repoId, empty = false }) {
     const [selectedRepo, setSelectedRepo] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(false)
