@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { getRepoByUid } from "~/action/repo";
-
+import { useAuth } from "~/context/AuthContext";
 // Project Repository Component
 export function ProjectRepositories({
   repository,
@@ -34,6 +34,8 @@ export function ProjectRepositories({
   repository: any;
   setRepository: Dispatch<SetStateAction<any>>;
 }) {
+
+  const auth = useAuth();
   return (
     <Card>
       <CardHeader className="px-4 pb-2 pt-4">
@@ -61,7 +63,7 @@ export function ProjectRepositories({
                     <div>
                       <p className="font-medium">{repository.Name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {repository.owner?.login || "Unknown"}/{repository.Name}
+                        {auth.login || "Unknown"}/{repository.Name}
                       </p>
                     </div>
                   </div>
