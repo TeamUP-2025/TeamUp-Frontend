@@ -119,10 +119,13 @@ export async function requestJoinProject(
   uID: string,
   coverLetter: string,
 ) {
+  const cookieStore = await cookies();
+  const token = await cookieStore.get("token");
   const projectfromID = await fetch(`${backendUrl}/project/${projectID}/join`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Cookie: `token=${token?.value};`,
     },
     body: JSON.stringify({
       projectId: projectID,
@@ -216,7 +219,7 @@ export async function updateProjectDetail(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        
+        Cookie: `token=${token?.value};`,
       },
       body: JSON.stringify({
         // Ensure keys match the backend Go struct tags (`json:"..."`)
