@@ -26,7 +26,6 @@ export default function CreateProjectPage() {
 
     });
 
-    // const 
     const [repositories, setRepositories] = useState([]);
 
     // Async function for handling form submission (placeholder)
