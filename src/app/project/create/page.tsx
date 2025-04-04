@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { createProject } from "~/lib/actions";
+import { createProject } from "~/action/project";
 import { Clock, CheckCircle2, FileText } from "lucide-react";
 
 // Import components
@@ -85,7 +85,7 @@ export default function CreateProjectPage() {
       if (result.success) {
         toast.success(`Created Project ${project.title}`);
         // Redirect to projects dashboard
-        router.push("/project-dashboard");
+        router.push(`/project-dashboard/${result.projectId}`);
       } else {
         throw new Error("Failed to create project");
       }
