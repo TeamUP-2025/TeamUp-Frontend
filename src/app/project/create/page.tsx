@@ -61,10 +61,37 @@ export default function CreateProjectPage() {
     }));
   }, [repository]);
 
+  // Check if all required fields are filled
+  const isFormValid = () => {
+    return (
+      project.title.trim() !== "" &&
+      project.longDescription.trim() !== "" &&
+      project.tags.length > 0 &&
+      roadmap.length > 0 &&
+      goals.length > 0 &&
+      Object.keys(license).length > 0 &&
+      project.repository !== null
+    );
+  };
+
   // Async function for handling form submission
   async function handleCreateProject() {
-    if (!project.title) {
-      toast.error("Please fill in the project title");
+    if (!isFormValid()) {
+      if (!project.title) {
+        toast.error("Please fill in the project title");
+      } else if (!project.longDescription) {
+        toast.error("Please provide a project description");
+      } else if (project.tags.length === 0) {
+        toast.error("Please add at least one tag");
+      } else if (roadmap.length === 0) {
+        toast.error("Please create a project roadmap");
+      } else if (goals.length === 0) {
+        toast.error("Please add at least one project goal");
+      } else if (Object.keys(license).length === 0) {
+        toast.error("Please select a license");
+      } else if (!project.repository) {
+        toast.error("Please add a repository");
+      }
       return;
     }
 
@@ -163,7 +190,7 @@ export default function CreateProjectPage() {
           <div className="pt-4">
             <Button
               onClick={handleCreateProject}
-              disabled={loading || !project.title}
+              disabled={loading || !isFormValid()}
               className="w-full px-8 md:w-auto"
               size="lg"
             >
