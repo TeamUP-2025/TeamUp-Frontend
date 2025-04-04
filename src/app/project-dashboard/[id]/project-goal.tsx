@@ -11,7 +11,7 @@ export default function ProjectGoals({ goals }) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
-                    <GoalsEditor initialGoals={goals} />
+                    {/* <GoalsEditor initialGoals={goals} /> */}
 
                     <div className="space-y-3">
                         {goals.map((goal, index) => (

@@ -18,19 +18,37 @@ import {
   Flag,
   OctagonAlert,
 } from "lucide-react";
-import JoinProjectPage  from "./join-form"
+import JoinProjectPage from "./join-form";
 import { getProject, getProjectByID } from "~/action/project";
 import { useAuth } from "~/context/AuthContext";
+
+// Helper function to determine the order priority of a milestone status
+const getStatusPriority = (status: string): number => {
+  switch (status) {
+    case "Completed":
+      return 1;
+    case "In Progress":
+      return 2;
+    case "Planned":
+    default:
+      return 3;
+  }
+};
 
 export default async function ProjectDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const { id } = await params
-  const project = await getProjectByID(
-      id
-  );
+  const { id } = await params;
+  const project = await getProjectByID(id);
+
+  // Sort roadmap items by status priority
+  const sortedRoadmap = [...project.Roadmap].sort((a, b) => {
+    return (
+      getStatusPriority(a.roadmapStatus) - getStatusPriority(b.roadmapStatus)
+    );
+  });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -66,12 +84,14 @@ export default async function ProjectDetailPage({
             <CardContent>
               <ul className="list-disc space-y-2 pl-5">
                 {project.Goal.map((goal, index) => (
-                    <li key={index}>
-                      <span className="font-semibold">{goal.goalName}</span>
-                      {goal.goalDescription && (
-                          <p className="text-sm text-gray-500">{goal.goalDescription}</p>
-                      )}
-                    </li>
+                  <li key={index}>
+                    <span className="font-semibold">{goal.goalName}</span>
+                    {goal.goalDescription && (
+                      <p className="text-sm text-gray-500">
+                        {goal.goalDescription}
+                      </p>
+                    )}
+                  </li>
                 ))}
               </ul>
             </CardContent>
@@ -81,27 +101,40 @@ export default async function ProjectDetailPage({
               <CardTitle>Project Roadmap</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-4">
-                {project.Roadmap.map((item, index) => (
-                  <li key={index} className="flex items-start space-x-2">
-                    {item.roadmapStatus === "Completed" && (
-                      <CheckCircle2 className="mt-1 h-5 w-5 text-green-500" />
+              <div className="space-y-8">
+                {sortedRoadmap.map((item, index) => (
+                  <div key={index} className="relative">
+                    {/* Progress line connecting milestones */}
+                    {index < sortedRoadmap.length - 1 && (
+                      <div className="absolute left-[15px] top-[30px] h-full w-[2px] bg-muted" />
                     )}
-                    {item.roadmapStatus === "In Progress" && (
-                      <Clock className="mt-1 h-5 w-5 text-yellow-500" />
-                    )}
-                    {item.roadmapStatus === "Planned" && (
-                      <Circle className="mt-1 h-5 w-5 text-gray-300" />
-                    )}
-                    <div>
-                      <h3 className="font-semibold">{item.roadmap}</h3>
-                      <p className="text-sm text-gray-500">
-                        {item.roadmapDescription}
-                      </p>
+
+                    <div className="flex gap-4">
+                      {/* Status indicator */}
+                      <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-background">
+                        {item.roadmapStatus === "Completed" ? (
+                          <CheckCircle2 className="h-5 w-5 text-primary" />
+                        ) : item.roadmapStatus === "In Progress" ? (
+                          <Clock className="h-5 w-5 text-amber-500" />
+                        ) : item.roadmapStatus === "Planned" ? (
+                          <Circle className="h-5 w-5 text-muted-foreground" />
+                        ) : (
+                          <Circle className="h-5 w-5 text-muted-foreground" />
+                        )}
+                      </div>
+
+                      <div className="flex flex-col space-y-1.5">
+                        <h3 className="font-medium leading-none">
+                          {item.roadmap}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {item.roadmapDescription}
+                        </p>
+                      </div>
                     </div>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -148,11 +181,9 @@ export default async function ProjectDetailPage({
 
           <div className="flex justify-center gap-4">
             <JoinProjectPage project={project} />
-            
+
             <Button size="lg">
-              <Link href={`/project/${id}/donate`}>
-                Donate
-              </Link>
+              <Link href={`/project/${id}/donate`}>Donate</Link>
             </Button>
           </div>
         </div>

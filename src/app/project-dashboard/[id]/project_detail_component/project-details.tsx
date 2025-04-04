@@ -13,14 +13,14 @@ import EditProject from "./edit-project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { ListCollapse, MessageSquareText, HandCoins } from "lucide-react";
 // import Chat from "~/components/chat/chat_component"; // Assuming ChatPage is used
-import ChatPage from "~/app/chat_test/[id]/page";
+import ChatPage from "~/components/chat/chat_entry";
 import { project as p } from "~/schema/project_schema";
 import z from "zod";
 
 type Project = z.infer<typeof p>;
 
 // Rename the prop for clarity
-export default function ProjectDetails({ project: initialProject }: { project: Project }) {
+export default function ProjectDetails({ project: initialProject, Socket_url }: { project: Project, Socket_url: string }) {
   // Use state to manage the project data within this component
   const [currentProject, setCurrentProject] = useState<Project>(initialProject);
 
@@ -117,7 +117,7 @@ export default function ProjectDetails({ project: initialProject }: { project: P
       </TabsContent>
       <TabsContent value="chat">
         {/* Use currentProject state for ID */}
-        <ChatPage params={{ id: currentProject.ID }}></ChatPage>
+        <ChatPage params={{ id: currentProject.ID, Socket_url: Socket_url }}></ChatPage>
       </TabsContent>
     </Tabs>
   );
