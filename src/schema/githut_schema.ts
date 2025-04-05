@@ -3,10 +3,10 @@ import { z } from "zod";
 export const githubUser = z.object({
   login: z.coerce.string(), //'ReggieReo',
   name: z.coerce.string(),
-  location: z.string().optional(),
+  location: z.string().optional().nullable(),
   avatar_url: z.coerce.string(),//'https://avatars.githubusercontent.com/u/103312026?v=4',
   html_url: z.coerce.string(),//'https://github.com/ReggieReo',
-  bio: z.coerce.string(),//'Undergraduate student in Software and Knowledge Engineering, Kasetsart University.',
+  bio: z.coerce.string().optional().nullable(),//'Undergraduate student in Software and Knowledge Engineering, Kasetsart University.',
   public_repos: z.coerce.number(),//22,
   followers: z.coerce.number(),//12,
   following: z.coerce.number(),
