@@ -1,29 +1,47 @@
-# Create T3 App
+# TEAM UP Front End
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# Installation Guide
 
-## What's next? How do I make an app with this?
+## Prerequisites
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Node.js 22+ 
+- pnpm 9.7.0+
+- PostgreSQL 15+
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Environment Setup
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd <project-directory>
+```
+2. Install dependencies
+```bash
+pnpm install
+```
+3. config a `.env` file in the root directory.
 
-## Learn More
+## Development
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Start the development server:
+```bash
+pnpm dev
+```
+The application will be available at `http://localhost:3000`
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Configuration
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+Set the following environment variables:
+- `JWT_SECRET`: JWT token secret for encrypting token
+- `BACKEND_URL`: Project service's url for talking with project service
+- `SOCKET_URL`: Chat service's url for talking with chat service
 
-## How do I deploy this?
+## Project Structure
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- `/src` - Application source code
+  - `/app` - Next.js app router pages and layouts
+  - `/components` - React components
+  - `/action` Server action
+  - `/libs` - Utility functions and helpers
+  - `/context` - Share context between component
+- `/public` - Static assets
